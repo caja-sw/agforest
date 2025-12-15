@@ -1,0 +1,38 @@
+:root {
+  --color-primary: #55b359;
+  --color-accent: #de3131;
+
+  --color-bg: #ffffff;
+  --color-border: #dddddd;
+
+  --color-text: #000000;
+  --color-text-muted: #4d4d4d;
+
+  --radius: 0.8rem;
+
+  --glass-blur: 10px;
+  --glass-saturate: 1.2;
+  --glass-bg: rgb(255 255 255 / 0.7);
+}
+
+html {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+* {
+  outline-color: var(--color-border);
+  border-color: var(--color-border);
+}
+
+.glass {
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-radius: var(--radius);
+  background-color: var(--glass-bg);
+}
+
+.card {
+  outline: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background-color: var(--color-bg);
+}

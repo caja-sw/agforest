@@ -1,0 +1,27 @@
+name: Build diesel image
+
+on:
+  push:
+    branches: [main]
+    paths: ["backend/diesel.Dockerfile", "backend/migrations/**"]
+
+permissions:
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./backend/diesel.Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/agforest-diesel:latest
