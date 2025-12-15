@@ -1,0 +1,23 @@
+[package]
+name    = "agforest-backend"
+edition = "2024"
+publish = false
+
+[dependencies]
+actix-web = { version = "4.11" }
+anyhow = { version = "1.0" }
+argon2 = { version = "0.5", features = ["std"] }
+blake3 = { version = "1.8" }
+chrono = { version = "0.4", features = ["serde"] }
+config = { version = "0.15" }
+diesel = { version = "2.2", features = [
+  "postgres",
+  "serde_json",
+  "chrono",
+  "r2d2",
+] }
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.47", features = ["full"] }
+tracing = { version = "0.1" }
+tracing-actix-web = { version = "0.7" }
+tracing-subscriber = { version = "0.3" }

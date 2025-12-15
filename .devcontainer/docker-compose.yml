@@ -1,0 +1,41 @@
+volumes:
+  target:
+  node_modules:
+  postgres-data:
+
+
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspaces/agforest:cached
+      - target:/workspaces/agforest/backend/target:cached
+      - node_modules:/workspaces/agforest/frontend/node_modules:cached
+    command: sleep infinity
+    environment:
+      - AGFOREST_SERVER_HOST=0.0.0.0
+      - AGFOREST_SERVER_PORT=3001
+      - AGFOREST_WORKER_THREADS=8
+      - AGFOREST_MAX_BLOCKING_THREADS=16
+      - AGFOREST_SHUTDOWN_TIMEOUT_SECS=30
+      - AGFOREST_DATABASE_URL=postgres://agforest:agforest@db:5432/agforest
+      - AGFOREST_DATABASE_CONNECTION_LIMIT=10
+
+      - PUBLIC_AGFOREST_INTERNAL_API_URL=http://mock:4010
+      - PUBLIC_AGFOREST_EXTERNAL_API_URL=http://localhost:4010
+
+  db:
+    image: postgres:17-trixie
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: agforest
+      POSTGRES_PASSWORD: agforest
+      POSTGRES_DB: agforest
+
+  mock:
+    image: stoplight/prism:5
+    ports:
+      - 4010:4010
+    command: [ "mock", "https://caja-sw.github.io/agforest-openapi/openapi.yaml", "--host", "0.0.0.0" ]
