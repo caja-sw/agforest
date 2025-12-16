@@ -42,12 +42,12 @@
           <header>
             <p>
               <span class="name">{comment.author.name}</span>
-              <span>#{comment.author.hash}</span>
+              <span>#{comment.author.hash.slice(0, 6)}</span>
             </p>
             <time>{new Date(comment.createdAt).toLocaleString()}</time>
           </header>
 
-          <p>{comment.content}</p>
+          <p class="content">{comment.content}</p>
 
           <div class="actions">
             <DeleteButton onclick={() => handleDelete(comment.id)} />
@@ -90,6 +90,10 @@
 
   .name {
     color: var(--color-text);
+  }
+
+  .content {
+    white-space: pre-wrap;
   }
 
   .actions {

@@ -39,7 +39,7 @@
     <div class="meta">
       <p>
         <span class="name">{post.author.name}</span>
-        <span>#{post.author.hash}</span>
+        <span>#{post.author.hash.slice(0, 6)}</span>
       </p>
       <time>{new Date(post.createdAt).toLocaleString()}</time>
     </div>
@@ -47,7 +47,7 @@
 
   <hr />
 
-  <p>{post.content}</p>
+  <p class="content">{post.content}</p>
 
   <div class="actions">
     <DeleteButton onclick={handleDelete} />
@@ -82,6 +82,10 @@
 
   hr {
     margin: 8px 0;
+  }
+
+  .content {
+    white-space: pre-wrap;
   }
 
   .actions {
