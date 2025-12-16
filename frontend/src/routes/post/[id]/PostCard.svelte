@@ -39,7 +39,7 @@
     <div class="meta">
       <p>
         <span class="name">{post.author.name}</span>
-        <span>#{post.author.hash}</span>
+        <span>#{post.author.hash.slice(0, 6)}</span>
       </p>
       <time>{new Date(post.createdAt).toLocaleString()}</time>
     </div>

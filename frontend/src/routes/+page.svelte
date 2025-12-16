@@ -59,7 +59,7 @@
                 <a class="post" href={resolve("/post/[id]", { id: String(post.id) })}>
                   <h2 class="title">{post.title}</h2>
                   <span class="name">{post.author.name}</span>
-                  <span class="hash">#{post.author.hash}</span>
+                  <span class="hash">#{post.author.hash.slice(0, 6)}</span>
                   <time class="created-at">{formatCreatedAt(new Date(post.createdAt))}</time>
                 </a>
               </section>
