@@ -10,6 +10,7 @@ use diesel::{
     prelude::*,
     select,
 };
+use serde_json::json;
 
 use crate::{
     dto::{CreateCommentRequest, CreateCommentResponse},
@@ -46,7 +47,9 @@ pub async fn create_comment(
         .ok();
 
     if !message_map.is_empty() {
-        return Ok(HttpResponse::UnprocessableEntity().json(message_map));
+        return Ok(HttpResponse::UnprocessableEntity().json(json!({
+            "messages": message_map
+        })));
     }
 
     let author_name = author_name.unwrap();

@@ -17,6 +17,7 @@ diesel = { version = "2.2", features = [
   "r2d2",
 ] }
 serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0" }
 tokio = { version = "1.47", features = ["full"] }
 tracing = { version = "0.1" }
 tracing-actix-web = { version = "0.7" }
