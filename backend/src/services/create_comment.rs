@@ -79,7 +79,7 @@ pub async fn create_comment(
     .map_err(|err| {
         if err
             .as_database_error()
-            .is_some_and(|err| err.constraint() == Some("fk_comments_post_id"))
+            .is_some_and(|err| err.constraint() == Some("comments_post_id_fkey"))
         {
             ErrorNotFound("Post not found")
         } else {

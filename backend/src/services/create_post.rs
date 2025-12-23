@@ -87,7 +87,7 @@ pub async fn create_post(
     .map_err(|err| {
         if err
             .as_database_error()
-            .is_some_and(|err| err.constraint() == Some("fk_posts_category_id"))
+            .is_some_and(|err| err.constraint() == Some("posts_category_id_fkey"))
         {
             ErrorNotFound("Category not found")
         } else {

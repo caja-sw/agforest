@@ -13,7 +13,7 @@ CREATE TABLE posts (
     content TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
-    CONSTRAINT fk_posts_category_id 
+    CONSTRAINT posts_category_id_fkey 
     FOREIGN KEY (category_id) 
     REFERENCES categories(id)
     ON DELETE RESTRICT
@@ -30,7 +30,7 @@ CREATE TABLE comments (
     content TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 
-    CONSTRAINT fk_comments_post_id
+    CONSTRAINT comments_post_id_fkey
     FOREIGN KEY (post_id) 
     REFERENCES posts(id)
     ON DELETE CASCADE
