@@ -13,25 +13,6 @@ type CharacterConstraint = {
   type: "CHARACTER_CONSTRAINT";
 };
 
-type AuthorConstraint =
-  | MinLengthConstraint
-  | MaxLengthConstraint
-  | LinebreakConstraint;
-
-type PasswordConstraint =
-  | CharacterConstraint
-  | MinLengthConstraint
-  | MaxLengthConstraint;
-
-type PostTitleConstraint =
-  | MinLengthConstraint
-  | MaxLengthConstraint
-  | LinebreakConstraint;
-
-type PostContentConstraint = MinLengthConstraint | MaxLengthConstraint;
-
-type CommentContentConstraint = MinLengthConstraint | MaxLengthConstraint;
-
 declare global {
   namespace App {
     interface PageData {
@@ -43,6 +24,25 @@ declare global {
       };
     }
   }
+
+  type AuthorConstraint =
+    | MinLengthConstraint
+    | MaxLengthConstraint
+    | LinebreakConstraint;
+
+  type PasswordConstraint =
+    | CharacterConstraint
+    | MinLengthConstraint
+    | MaxLengthConstraint;
+
+  type PostTitleConstraint =
+    | MinLengthConstraint
+    | MaxLengthConstraint
+    | LinebreakConstraint;
+
+  type PostContentConstraint = MinLengthConstraint | MaxLengthConstraint;
+
+  type CommentContentConstraint = MinLengthConstraint | MaxLengthConstraint;
 
   type CreatePostConstraints = {
     constraints: {
