@@ -5,7 +5,10 @@
 
 <div>
   <textarea
-    class="card"
+    class={[
+      "card focus:outline-primary min-h-[calc(1lh*var(--min-lines)+20px)] w-full resize-none p-3",
+      error.length > 0 && "outline-accent",
+    ]}
     name="content"
     bind:value
     style:--min-lines={minLines}
@@ -16,26 +19,5 @@
       currentTarget.style.height = `${currentTarget.scrollHeight}px`;
     }}
   ></textarea>
-  <span>{error}</span>
+  <span class="text-accent">{error}</span>
 </div>
-
-<style>
-  textarea {
-    padding: 10px;
-    width: 100%;
-    min-height: calc(1lh * var(--min-lines) + 20px);
-    resize: none;
-  }
-
-  textarea:focus {
-    outline-color: var(--color-primary);
-  }
-
-  textarea.error {
-    outline-color: var(--color-accent);
-  }
-
-  span {
-    color: var(--color-accent);
-  }
-</style>

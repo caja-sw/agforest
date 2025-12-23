@@ -5,29 +5,14 @@
 </script>
 
 <div>
-  <label for={id}>{label}</label>
-  <select class="card" {id} bind:value>
+  <label class="text-sm font-semibold" for={id}>{label}</label>
+  <select
+    class="card focus:outline-primary w-full appearance-none p-3"
+    {id}
+    bind:value
+  >
     {#each values as value (value.id)}
       <option {value}>{value.name}</option>
     {/each}
   </select>
 </div>
-
-<style>
-  label {
-    display: inline-block;
-    width: max-content;
-    font-weight: 600;
-    font-size: 0.8rem;
-  }
-
-  select {
-    appearance: none;
-    padding: 10px;
-    width: 100%;
-  }
-
-  select:focus {
-    outline-color: var(--color-primary);
-  }
-</style>

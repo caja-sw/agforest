@@ -34,19 +34,16 @@ export async function createPost(
  * @param {number} param0.offset
  * @param {number} param0.limit
  * @returns {Promise<{
- *   totalPostCount: number,
+ *   totalCount: number,
  *   posts: {
  *     id: number,
  *     author: {
  *       name: string,
  *       hash: string
  *     },
- *     category: {
- *       id: number,
- *       name: string
- *     },
  *     title: string,
- *     createdAt: string
+ *     createdAt: string,
+ *     commentCount: number
  *   }[]
  * }>}
  */
@@ -74,17 +71,26 @@ export async function getPosts(
  * @param {number} param0.id
  * @returns {Promise<{
  *   id: number,
- *   author: {
- *     name: string,
- *     hash: string
- *   },
  *   category: {
  *     id: number,
  *     name: string
  *   },
+ *   author: {
+ *     name: string,
+ *     hash: string
+ *   },
  *   title: string,
  *   content: string,
- *   createdAt: string
+ *   createdAt: string,
+ *   comments: {
+ *     id: number,
+ *     author: {
+ *       name: string,
+ *       hash: string,
+ *     },
+ *     content: string,
+ *     createdAt: string
+ *   }[]
  * }>}
  */
 export async function getPost({ id }, fetch = window.fetch) {

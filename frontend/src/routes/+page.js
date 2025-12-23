@@ -1,4 +1,5 @@
 import { getCategories, getPosts } from "$lib/api";
+import { error } from "@sveltejs/kit";
 
 const PAGE_ITEM_COUNT = 20;
 
@@ -7,7 +8,7 @@ export async function load({ fetch, url }) {
   const { categories } = await getCategories(fetch);
 
   const currentCategory = (() => {
-    const defaultCategory = categories.at(0) ?? null;
+    const defaultCategory = categories.at(0) ?? error(404);
     const param = url.searchParams.get("c");
     if (param === null || !/^\d+$/.test(param)) return defaultCategory;
     const id = Number(param);
@@ -22,11 +23,11 @@ export async function load({ fetch, url }) {
 
   const offset = (currentPage - 1) * PAGE_ITEM_COUNT;
   const limit = PAGE_ITEM_COUNT;
-  const { totalPostCount = 0, posts = [] } = currentCategory
+  const { totalCount = 0, posts = [] } = currentCategory
     ? await getPosts({ categoryId: currentCategory.id, offset, limit }, fetch)
     : {};
 
-  const pageCount = Math.ceil(totalPostCount / PAGE_ITEM_COUNT);
+  const pageCount = Math.ceil(totalCount / PAGE_ITEM_COUNT);
   const pages = getPagination(currentPage, pageCount);
 
   return {

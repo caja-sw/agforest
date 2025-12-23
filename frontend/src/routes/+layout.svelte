@@ -6,7 +6,7 @@
   import { onMount } from "svelte";
 
   const { children } = $props();
-  const { title, description, ogtype } = page.data;
+  const { title, description, article } = page.data;
   const canonicalHref = new URL(page.url.pathname, page.url.origin).href;
 
   const images = [
@@ -21,7 +21,6 @@
     asset("/images/school-09.jpg"),
     asset("/images/school-10.jpg"),
     asset("/images/school-11.jpg"),
-    asset("/images/school-12.jpg"),
   ];
 
   let bgImage = $state("");
@@ -50,22 +49,28 @@
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalHref} />
-  <meta property="og:type" content={ogtype} />
+  {#if article}
+    <meta property="og:type" content="article" />
+    <meta property="article:published_time" content={article.publishedTime} />
+    <meta property="article:section" content={article.section} />
+  {:else}
+    <meta property="og:type" content="website" />
+  {/if}
 </svelte:head>
 
 <div
-  class="min-h-screen before:fixed before:inset-0 before:-z-10 before:bg-(--bg-image) before:bg-cover before:bg-center before:bg-no-repeat before:opacity-60 before:duration-1000 before:ease-in-out before:content-['']"
+  class="min-h-screen before:fixed before:inset-0 before:-z-10 before:bg-(image:--bg-image) before:bg-cover before:bg-center before:bg-no-repeat before:opacity-60 before:duration-1000 before:ease-in-out before:content-['']"
   style:--bg-image={bgImage}
 >
-  <div class="mx-auto grid w-full max-w-7xl min-w-min gap-8 p-16">
-    <header>
+  <div class="mx-auto grid max-w-7xl md:gap-8 md:p-16">
+    <header class="p-4 md:p-0">
       <h1>
         <a
-          class="inline-block w-max text-6xl leading-none font-semibold text-bg text-shadow-lg/30"
+          class="text-bg text-4xl font-semibold text-shadow-lg/20 md:text-6xl"
           href={resolve("/")}>앙고나무숲</a
         >
       </h1>
     </header>
-    <main class="w-full">{@render children()}</main>
+    <main>{@render children()}</main>
   </div>
 </div>

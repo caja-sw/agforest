@@ -24,8 +24,8 @@ services:
 
       DATABASE_URL: postgres://agforest:agforest@database:5432/agforest
 
-      PUBLIC_AGFOREST_INTERNAL_API_URL: http://mock:4010
-      PUBLIC_AGFOREST_EXTERNAL_API_URL: http://localhost:4010
+      PUBLIC_AGFOREST_INTERNAL_API_URL: http://localhost:3000/api
+      PUBLIC_AGFOREST_EXTERNAL_API_URL: http://localhost:3000/api
 
   database:
     image: postgres:17-trixie
@@ -35,9 +35,3 @@ services:
       POSTGRES_USER: agforest
       POSTGRES_PASSWORD: agforest
       POSTGRES_DB: agforest
-
-  mock:
-    image: stoplight/prism:5
-    ports:
-      - 4010:4010
-    command: [ "mock", "https://caja-sw.github.io/agforest-openapi/openapi.yaml", "--host", "0.0.0.0" ]

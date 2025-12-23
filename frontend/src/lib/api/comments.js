@@ -24,31 +24,6 @@ export async function createComment(
 }
 
 /**
- * 댓글 목록 조회
- *
- * @param {Object} param0
- * @param {number} param0.postId
- * @returns {Promise<{
- *   comments: {
- *     id: number,
- *     author: {
- *       name: string,
- *       hash: string,
- *     },
- *     content: string,
- *     createdAt: string
- *   }[]
- * }>}
- */
-export async function getComments({ postId }, fetch = window.fetch) {
-  const res = await fetch(`${API_BASE}/posts/${postId}/comments`);
-
-  if (!res.ok) return Promise.reject(res);
-
-  return await res.json();
-}
-
-/**
  * 댓글 삭제
  *
  * @param {Object} param0

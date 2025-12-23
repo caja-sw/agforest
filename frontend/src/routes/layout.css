@@ -15,7 +15,7 @@
 
 @layer base {
   body {
-    @apply bg-bg font-sans text-text;
+    @apply bg-bg text-text font-sans;
   }
 
   * {
@@ -24,9 +24,9 @@
 }
 
 @utility card {
-  @apply rounded-xl bg-bg outline;
+  @apply bg-bg rounded-xl outline;
 }
 
 @utility glass {
-  @apply rounded-xl bg-bg/70 backdrop-blur-sm backdrop-saturate-120;
+  @apply bg-bg/70 rounded-xl backdrop-blur-sm backdrop-saturate-120;
 }
