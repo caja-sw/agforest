@@ -75,7 +75,7 @@
         >
       </h1>
       <a href="https://github.com/caja-sw/agforest" target="_blank">
-        <div class="glass p-2">
+        <div class="glass text-text-muted hover:text-text p-2">
           <span>GitHub</span>
         </div>
       </a>
