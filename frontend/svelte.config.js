@@ -5,7 +5,7 @@ export default {
   kit: {
     adapter: adapter(),
     paths: {
-      assets: "https://aeris-lang.org",
+      assets: "https://agforest.org",
     },
   },
 };
