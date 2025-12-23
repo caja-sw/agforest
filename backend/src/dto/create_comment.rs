@@ -1,10 +1,13 @@
 use serde::{Deserialize, Serialize};
 
-use crate::vo::{AuthorName, CommentContent, Password};
+use crate::{
+    entity::create_comment::CommentEntity,
+    vo::{AuthorName, CommentContent, Password},
+};
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct CreateCommentRequest {
+pub struct Request {
     pub author: AuthorName,
     pub password: Password,
     pub content: CommentContent,
@@ -12,6 +15,12 @@ pub struct CreateCommentRequest {
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct CreateCommentResponse {
-    pub id: i32,
+pub struct Response {
+    pub id: i64,
+}
+
+impl From<CommentEntity> for Response {
+    fn from(value: CommentEntity) -> Self {
+        Self { id: value.id }
+    }
 }

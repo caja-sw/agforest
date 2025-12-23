@@ -3,45 +3,64 @@ use actix_web::{
     error::{ErrorInternalServerError, ErrorNotFound},
     get, web,
 };
-use diesel::prelude::*;
+use sqlx::{Pool, Postgres};
 
 use crate::{
-    dao::GetPostPost,
-    dto::GetPostResponse,
-    helpers::{DBPool, connect},
+    dto::get_post::Response,
+    entity::get_post::{CommentEntity, PostEntity},
 };
 
 #[get("/posts/{id}")]
 pub async fn get_post(
     path: web::Path<i32>,
-    pool: web::Data<DBPool>,
+    pool: web::Data<Pool<Postgres>>,
 ) -> actix_web::Result<impl Responder> {
     let post_id = path.into_inner();
-    let mut connection = connect(pool)?;
+    let mut tx = pool.begin().await.map_err(ErrorInternalServerError)?;
 
-    let data = web::block(move || {
-        use crate::schema::categories::dsl::{self as category, categories};
-        use crate::schema::posts::dsl::{self as post, posts};
-
-        posts
-            .inner_join(categories.on(category::id.eq(post::category_id)))
-            .filter(post::id.eq(post_id))
-            .select((
-                post::id,
-                post::author_name,
-                post::author_hash,
-                post::category_id,
-                category::name,
-                post::title,
-                post::content,
-                post::created_at,
-            ))
-            .first::<GetPostPost>(&mut connection)
-            .optional()
-    })
-    .await?
+    let post = sqlx::query_as!(
+        PostEntity,
+        r#"
+        SELECT 
+            p.id,
+            p.author_name,
+            p.author_hash,
+            p.category_id,
+            c.name AS category_name,
+            p.title,
+            p.content,
+            p.created_at
+        FROM posts p
+        INNER JOIN categories c ON p.category_id = c.id
+        WHERE p.id = $1
+        "#,
+        post_id
+    )
+    .fetch_optional(&mut *tx)
+    .await
     .map_err(ErrorInternalServerError)?
     .ok_or_else(|| ErrorNotFound("Post not found"))?;
 
-    Ok(HttpResponse::Ok().json(GetPostResponse::from(data)))
+    let comments = sqlx::query_as!(
+        CommentEntity,
+        r#"
+        SELECT
+            id,
+            author_name,
+            author_hash,
+            content,
+            created_at
+        FROM comments
+        WHERE post_id = $1
+        ORDER BY created_at ASC
+        "#,
+        post_id
+    )
+    .fetch_all(&mut *tx)
+    .await
+    .map_err(ErrorInternalServerError)?;
+
+    tx.commit().await.map_err(ErrorInternalServerError)?;
+
+    Ok(HttpResponse::Ok().json(Response::from((post, comments))))
 }

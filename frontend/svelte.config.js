@@ -4,5 +4,8 @@ import adapter from "@sveltejs/adapter-node";
 export default {
   kit: {
     adapter: adapter(),
+    paths: {
+      assets: "https://aeris-lang.org",
+    },
   },
 };

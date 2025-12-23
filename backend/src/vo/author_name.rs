@@ -1,31 +1,34 @@
 use serde::Deserialize;
+use serde_json::{Value, json};
 
-use crate::constants::{AUTHOR_NAME_MAX_LENGTH, AUTHOR_NAME_MIN_LENGTH};
+use crate::constant::{AUTHOR_NAME_MAX_LENGTH, AUTHOR_NAME_MIN_LENGTH};
 
 #[derive(Deserialize)]
 pub struct AuthorName(String);
 
 impl AuthorName {
-    pub fn unwrap(self) -> Result<String, String> {
+    pub fn unwrap(self) -> Result<String, Value> {
         let value = self.0.trim();
         let len = value.len();
 
         if len < AUTHOR_NAME_MIN_LENGTH {
-            return Err(format!(
-                "작성자명은 {}글자보다 짧을 수 없습니다.",
-                AUTHOR_NAME_MIN_LENGTH
-            ));
+            return Err(json!({
+                "type": "MIN_LENGTH_CONSTRAINT",
+                "value": AUTHOR_NAME_MIN_LENGTH,
+            }));
         }
 
         if len > AUTHOR_NAME_MAX_LENGTH {
-            return Err(format!(
-                "작성자명은 {}글자보다 길 수 없습니다.",
-                AUTHOR_NAME_MAX_LENGTH
-            ));
+            return Err(json!({
+                "type": "MAX_LENGTH_CONSTRAINT",
+                "value": AUTHOR_NAME_MAX_LENGTH,
+            }));
         }
 
         if value.contains('\n') {
-            return Err("작성자명은 줄바꿈을 포함할 수 없습니다.".to_string());
+            return Err(json!({
+                "type": "LINEBREAK_CONSTRAINT",
+            }));
         }
 
         Ok(value.to_string())

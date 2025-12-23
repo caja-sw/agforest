@@ -6,10 +6,10 @@ mod password;
 mod post_content;
 mod post_title;
 
-pub use author_name::*;
-pub use comment_content::*;
-pub use page_limit::*;
-pub use page_offset::*;
-pub use password::*;
-pub use post_content::*;
-pub use post_title::*;
+pub use author_name::AuthorName;
+pub use comment_content::CommentContent;
+pub use page_limit::PageLimit;
+pub use page_offset::PageOffset;
+pub use password::Password;
+pub use post_content::PostContent;
+pub use post_title::PostTitle;

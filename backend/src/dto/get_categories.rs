@@ -1,17 +1,25 @@
 use serde::Serialize;
 
-use crate::{dao::GetCategoriesCategory, dto::CategoryDTO};
+use crate::entity::get_categories::CategoryEntity;
+
+use super::Category;
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct GetCategoriesResponse {
-    pub categories: Vec<CategoryDTO>,
+pub struct Response {
+    pub categories: Vec<Category>,
 }
 
-impl From<Vec<GetCategoriesCategory>> for GetCategoriesResponse {
-    fn from(categories: Vec<GetCategoriesCategory>) -> Self {
+impl From<Vec<CategoryEntity>> for Response {
+    fn from(value: Vec<CategoryEntity>) -> Self {
         Self {
-            categories: categories.into_iter().map(CategoryDTO::from).collect(),
+            categories: value
+                .into_iter()
+                .map(|req| Category {
+                    id: req.id,
+                    name: req.name,
+                })
+                .collect(),
         }
     }
 }

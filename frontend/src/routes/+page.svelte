@@ -2,7 +2,8 @@
   import { resolve } from "$app/paths";
 
   const { data } = $props();
-  const { categories, currentCategory, pages, currentPage, posts } = $derived(data);
+  const { categories, currentCategory, pages, currentPage, posts } =
+    $derived(data);
 
   /**
    * @param {Date} date
@@ -31,52 +32,88 @@
   }
 </script>
 
-<div class="container">
-  <nav class="navbar glass">
-    <ul class="categories">
+<div class="grid gap-4">
+  <nav class="glass flex justify-between p-4">
+    <ul class="flex">
       {#each categories as category (category.id)}
         <li>
-          <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-          <a href={`${resolve("/")}?c=${category.id}`}>{category.name}</a>
+          <!-- eslint-disable svelte/no-navigation-without-resolve -->
+          <a
+            class="block p-2 leading-none"
+            href={`${resolve("/")}?c=${category.id}`}>{category.name}</a
+          >
+          <!-- eslint-enable svelte/no-navigation-without-resolve -->
         </li>
       {/each}
     </ul>
 
-    <div class="actions">
-      <a href={resolve("/write")}>게시글 쓰기</a>
+    <div class="flex">
+      <a class="block p-2 leading-none" href={resolve("/write")}>게시글 쓰기</a>
     </div>
   </nav>
 
-  {#if currentCategory !== null}
-    <section class="content glass">
-      <h1>{currentCategory.name}</h1>
+  <section class="glass grid gap-6 py-6">
+    <h1 class="px-6 text-2xl leading-none">{currentCategory.name}</h1>
 
-      <section class="posts card">
+    <div class="card p-4 md:mx-6">
+      {#if posts.length > 0}
         <ul>
           {#each posts as post (post.id)}
             <li>
-              <section>
-                <a class="post" href={resolve("/post/[id]", { id: String(post.id) })}>
-                  <h2 class="title">{post.title}</h2>
-                  <span class="name">{post.author.name}</span>
-                  <span class="hash">#{post.author.hash.slice(0, 6)}</span>
-                  <time class="created-at">{formatCreatedAt(new Date(post.createdAt))}</time>
-                </a>
-              </section>
+              <a href={resolve("/post/[id]", { id: String(post.id) })}>
+                <section
+                  class="hover:bg-text/5 grid grid-cols-[1fr_auto] gap-4 py-1"
+                >
+                  <div>
+                    <h1 class="grid">
+                      <span
+                        class="overflow-hidden text-ellipsis whitespace-nowrap"
+                        >{post.title}</span
+                      >
+                    </h1>
+                    <div class="text-text-muted flex flex-wrap gap-x-4">
+                      <span class="grid grid-cols-[1fr_auto]">
+                        <span
+                          class="overflow-hidden text-ellipsis whitespace-nowrap"
+                          >{post.author.name}</span
+                        >
+                        <span>#{post.author.hash.slice(0, 6)}</span>
+                      </span>
+                      <time>{formatCreatedAt(new Date(post.createdAt))}</time>
+                    </div>
+                  </div>
+                  <div class="w-8 place-self-center text-center">
+                    <span
+                      >{post.commentCount < 100
+                        ? post.commentCount
+                        : "99+"}</span
+                    >
+                  </div>
+                </section>
+              </a>
             </li>
           {/each}
         </ul>
-      </section>
-    </section>
+      {:else}
+        <p>게시글이 없습니다</p>
+      {/if}
+    </div>
+  </section>
 
-    <nav class="pagination glass">
-      <ul>
+  {#if posts.length > 0}
+    <nav class="glass p-4">
+      <ul class="flex flex-row justify-center gap-5">
         {#each pages as page (page)}
           <li>
             <!-- eslint-disable svelte/no-navigation-without-resolve -->
             <a
+              class={[
+                "grid size-10 place-items-center rounded-full font-bold outline",
+                page === currentPage
+                  ? "bg-primary text-bg"
+                  : "bg-bg text-text-muted",
+              ]}
               href={`${resolve("/")}?c=${currentCategory.id}&p=${page}`}
-              class:current={page === currentPage}
             >
               <span>{page}</span>
             </a>
@@ -87,106 +124,3 @@
     </nav>
   {/if}
 </div>
-
-<style>
-  .container {
-    display: grid;
-    gap: 16px;
-  }
-
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    padding: 16px;
-  }
-
-  .categories,
-  .actions {
-    display: flex;
-  }
-
-  .categories > li > a,
-  .actions > a {
-    display: block;
-    padding: 8px;
-    line-height: 1;
-  }
-
-  .content {
-    display: grid;
-    gap: 24px;
-    padding: 24px;
-  }
-
-  .content > h1 {
-    font-size: 1.5rem;
-    line-height: 1;
-  }
-
-  .posts {
-    padding: 16px;
-  }
-
-  .post {
-    display: grid;
-    grid-template-columns: minmax(5rem, 1fr) repeat(3, 10rem);
-  }
-
-  .post:hover {
-    background-color: rgb(0 0 0 / 0.1);
-  }
-
-  .post > .title {
-    place-self: start;
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .post > .name {
-    display: block;
-    width: 100%;
-    overflow: hidden;
-    text-align: end;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .post > .hash {
-    place-self: start;
-    color: var(--color-text-muted);
-  }
-
-  .post > .created-at {
-    place-self: end;
-  }
-
-  .pagination {
-    padding: 16px;
-  }
-
-  .pagination > ul {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 20px;
-  }
-
-  .pagination > ul > li > a {
-    display: grid;
-    place-items: center;
-    outline: 1px solid var(--color-border);
-    border-radius: 50%;
-    background-color: var(--color-bg);
-    width: 40px;
-    height: 40px;
-    color: var(--color-text-muted);
-    font-weight: bold;
-  }
-
-  .pagination > ul > li > a.current {
-    background-color: var(--color-primary);
-    color: var(--color-bg);
-  }
-</style>

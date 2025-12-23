@@ -1,25 +1,20 @@
 use actix_web::{HttpResponse, Responder, error::ErrorInternalServerError, get, web};
-use diesel::prelude::*;
+use sqlx::{Pool, Postgres};
 
-use crate::{
-    dao::GetCategoriesCategory,
-    dto::GetCategoriesResponse,
-    helpers::{DBPool, connect},
-};
+use crate::{dto::get_categories::Response, entity::get_categories::CategoryEntity};
 
 #[get("/categories")]
-pub async fn get_categories(pool: web::Data<DBPool>) -> actix_web::Result<impl Responder> {
-    let mut connection = connect(pool)?;
-
-    let data = web::block(move || {
-        use crate::schema::categories::dsl::{self as category, categories};
-
-        categories
-            .select((category::id, category::name))
-            .load::<GetCategoriesCategory>(&mut connection)
-    })
-    .await?
+pub async fn get_categories(pool: web::Data<Pool<Postgres>>) -> actix_web::Result<impl Responder> {
+    let categories = sqlx::query_as!(
+        CategoryEntity,
+        r#"
+        SELECT id, name
+        FROM categories
+        "#
+    )
+    .fetch_all(pool.get_ref())
+    .await
     .map_err(ErrorInternalServerError)?;
 
-    Ok(HttpResponse::Ok().json(GetCategoriesResponse::from(data)))
+    Ok(HttpResponse::Ok().json(Response::from(categories)))
 }

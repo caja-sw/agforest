@@ -1,4 +1,4 @@
-use agforest_backend::*;
+use agforest_backend::{Config, start_server};
 use anyhow::{Context, Result};
 use config::{Config as ConfigLoader, Environment};
 use tracing_subscriber::{self, fmt::format::FmtSpan};

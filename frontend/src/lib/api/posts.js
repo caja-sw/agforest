@@ -34,25 +34,30 @@ export async function createPost(
  * @param {number} param0.offset
  * @param {number} param0.limit
  * @returns {Promise<{
- *   totalPostCount: number,
+ *   totalCount: number,
  *   posts: {
  *     id: number,
  *     author: {
  *       name: string,
  *       hash: string
  *     },
- *     category: {
- *       id: number,
- *       name: string
- *     },
  *     title: string,
- *     createdAt: string
+ *     createdAt: string,
+ *     commentCount: number
  *   }[]
  * }>}
  */
-export async function getPosts({ categoryId, offset, limit }, fetch = window.fetch) {
-  const params = new URLSearchParams({ offset: String(offset), limit: String(limit) });
-  const res = await fetch(`${API_BASE}/categories/${categoryId}/posts?${params}`);
+export async function getPosts(
+  { categoryId, offset, limit },
+  fetch = window.fetch,
+) {
+  const params = new URLSearchParams({
+    offset: String(offset),
+    limit: String(limit),
+  });
+  const res = await fetch(
+    `${API_BASE}/categories/${categoryId}/posts?${params}`,
+  );
 
   if (!res.ok) return Promise.reject(res);
 
@@ -66,17 +71,26 @@ export async function getPosts({ categoryId, offset, limit }, fetch = window.fet
  * @param {number} param0.id
  * @returns {Promise<{
  *   id: number,
- *   author: {
- *     name: string,
- *     hash: string
- *   },
  *   category: {
  *     id: number,
  *     name: string
  *   },
+ *   author: {
+ *     name: string,
+ *     hash: string
+ *   },
  *   title: string,
  *   content: string,
- *   createdAt: string
+ *   createdAt: string,
+ *   comments: {
+ *     id: number,
+ *     author: {
+ *       name: string,
+ *       hash: string,
+ *     },
+ *     content: string,
+ *     createdAt: string
+ *   }[]
  * }>}
  */
 export async function getPost({ id }, fetch = window.fetch) {

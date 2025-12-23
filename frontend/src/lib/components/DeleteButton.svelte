@@ -3,18 +3,7 @@
   const props = $props();
 </script>
 
-<button {...props}>삭제</button>
-
-<style>
-  button {
-    border-radius: var(--radius);
-    background-color: var(--color-accent);
-    padding: 10px 20px;
-    color: var(--color-bg);
-    font-weight: 700;
-  }
-
-  button:hover {
-    cursor: pointer;
-  }
-</style>
+<button
+  class="bg-accent disabled:bg-accent/50 text-bg rounded-xl px-6 py-3 font-bold hover:cursor-pointer"
+  {...props}>삭제</button
+>
