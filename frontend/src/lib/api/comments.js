@@ -10,7 +10,10 @@ import { API_BASE, jsonHeader } from "./util";
  * @param {string} param0.content
  * @returns {Promise<void>}
  */
-export async function createComment({ postId, author, password, content }, fetch = window.fetch) {
+export async function createComment(
+  { postId, author, password, content },
+  fetch = window.fetch,
+) {
   const res = await fetch(`${API_BASE}/posts/${postId}/comments`, {
     method: "POST",
     headers: jsonHeader,

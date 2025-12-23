@@ -1,6 +1,6 @@
 <script>
   import { deleteComment } from "$lib/api";
-  import DeleteButton from "$lib/components/DeleteButton.svelte";
+  import { DeleteButton } from "$lib/components";
 
   /** @type {{ comments: { id: number, author: { name: string, hash: string }, content: string, createdAt: string }[], onupdate: () => void }} */
   const { comments, onupdate } = $props();

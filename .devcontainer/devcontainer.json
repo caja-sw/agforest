@@ -9,6 +9,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        "bradlc.vscode-tailwindcss",
         "esbenp.prettier-vscode",
         "github.vscode-github-actions",
         "ms-azuretools.vscode-containers",

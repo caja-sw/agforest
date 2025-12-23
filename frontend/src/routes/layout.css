@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: sans-serif;
+
+  --color-primary: #55b359;
+  --color-accent: #de3131;
+
+  --color-bg: #ffffff;
+  --color-border: #dddddd;
+
+  --color-text: #000000;
+  --color-text-muted: #4d4d4d;
+}
+
+@layer base {
+  body {
+    @apply bg-bg font-sans text-text;
+  }
+
+  * {
+    @apply border-border outline-border;
+  }
+}
+
+@utility card {
+  @apply rounded-xl bg-bg outline;
+}
+
+@utility glass {
+  @apply rounded-xl bg-bg/70 backdrop-blur-sm backdrop-saturate-120;
+}

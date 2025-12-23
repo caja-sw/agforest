@@ -50,9 +50,17 @@ export async function createPost(
  *   }[]
  * }>}
  */
-export async function getPosts({ categoryId, offset, limit }, fetch = window.fetch) {
-  const params = new URLSearchParams({ offset: String(offset), limit: String(limit) });
-  const res = await fetch(`${API_BASE}/categories/${categoryId}/posts?${params}`);
+export async function getPosts(
+  { categoryId, offset, limit },
+  fetch = window.fetch,
+) {
+  const params = new URLSearchParams({
+    offset: String(offset),
+    limit: String(limit),
+  });
+  const res = await fetch(
+    `${API_BASE}/categories/${categoryId}/posts?${params}`,
+  );
 
   if (!res.ok) return Promise.reject(res);
 

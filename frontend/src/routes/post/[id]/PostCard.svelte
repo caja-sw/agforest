@@ -2,7 +2,7 @@
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { deletePost } from "$lib/api";
-  import DeleteButton from "$lib/components/DeleteButton.svelte";
+  import { DeleteButton } from "$lib/components";
 
   const { post } = $props();
 

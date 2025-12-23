@@ -31,6 +31,8 @@ export async function load({ fetch, url }) {
 
   return {
     title: currentCategory?.name ?? "",
+    description: "",
+    ogtype: "website",
     categories,
     currentCategory,
     pages,

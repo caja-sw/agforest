@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-use crate::constants::{PAGE_LIMIT_MAX, PAGE_LIMIT_MIN};
+use crate::constant::{PAGE_LIMIT_MAX, PAGE_LIMIT_MIN};
 
 pub struct PageLimit(i64);
 

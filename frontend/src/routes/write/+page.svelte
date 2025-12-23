@@ -2,10 +2,12 @@
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { createPost } from "$lib/api";
-  import ContentField from "$lib/components/ContentField.svelte";
-  import InputField from "$lib/components/InputField.svelte";
-  import SelectField from "$lib/components/SelectField.svelte";
-  import SubmitButton from "$lib/components/SubmitButton.svelte";
+  import {
+    ContentField,
+    InputField,
+    SelectField,
+    SubmitButton,
+  } from "$lib/components";
 
   const { data } = $props();
   const { categories } = $derived(data);
@@ -28,7 +30,13 @@
     try {
       const categoryId = category?.id;
       if (categoryId === undefined) return;
-      const { id } = await createPost({ categoryId, author, password, title, content });
+      const { id } = await createPost({
+        categoryId,
+        author,
+        password,
+        title,
+        content,
+      });
       goto(resolve("/post/[id]", { id: String(id) }));
     } catch (errRes) {
       if (!(errRes instanceof Response)) throw errRes;
@@ -55,17 +63,28 @@
   }
 </script>
 
-<div class="container glass">
-  <h1 class="header">게시글 작성</h1>
-  <form onsubmit={submit} novalidate>
-    <div class="meta">
-      <div class="category">
-        <SelectField label="카테고리" values={categories} bind:value={category} />
+<div class="flex w-full flex-col gap-4 glass p-6">
+  <h1 class="block w-max text-2xl leading-none">게시글 작성</h1>
+  <form class="grid gap-4" onsubmit={submit} novalidate>
+    <div
+      class="grid grid-cols-[1fr_1fr] gap-x-4 gap-y-1 [grid-template-areas:'category_.''author_password''title_title']"
+    >
+      <div class="[grid-area:category]">
+        <SelectField
+          label="카테고리"
+          values={categories}
+          bind:value={category}
+        />
       </div>
-      <div class="author">
-        <InputField label="닉네임" type="text" bind:value={author} bind:error={authorError} />
+      <div class="[grid-area:author]">
+        <InputField
+          label="닉네임"
+          type="text"
+          bind:value={author}
+          bind:error={authorError}
+        />
       </div>
-      <div class="password">
+      <div class="[grid-area:password]">
         <InputField
           label="비밀번호"
           type="password"
@@ -73,67 +92,24 @@
           bind:error={passwordError}
         />
       </div>
-      <div class="title">
-        <InputField label="제목" type="text" bind:value={title} bind:error={titleError} />
+      <div class="[grid-area:title]">
+        <InputField
+          label="제목"
+          type="text"
+          bind:value={title}
+          bind:error={titleError}
+        />
       </div>
     </div>
 
-    <ContentField bind:value={content} bind:error={contentError} minLines={10} />
+    <ContentField
+      bind:value={content}
+      bind:error={contentError}
+      minLines={10}
+    />
 
-    <div class="actions">
+    <div class="place-self-end">
       <SubmitButton />
     </div>
   </form>
 </div>
-
-<style>
-  .container {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 24px;
-    width: 100%;
-  }
-
-  .header {
-    display: block;
-    width: max-content;
-    font-size: 1.5rem;
-    line-height: 1;
-  }
-
-  form {
-    display: grid;
-    gap: 16px;
-  }
-
-  .meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "category .       "
-      "author   password"
-      "title    title   ";
-    gap: 4px 16px;
-  }
-
-  .category {
-    grid-area: category;
-  }
-
-  .author {
-    grid-area: author;
-  }
-
-  .password {
-    grid-area: password;
-  }
-
-  .title {
-    grid-area: title;
-  }
-
-  .actions {
-    place-self: end;
-  }
-</style>

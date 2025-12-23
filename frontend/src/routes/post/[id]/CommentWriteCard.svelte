@@ -1,8 +1,6 @@
 <script>
   import { createComment } from "$lib/api";
-  import ContentField from "$lib/components/ContentField.svelte";
-  import InputField from "$lib/components/InputField.svelte";
-  import SubmitButton from "$lib/components/SubmitButton.svelte";
+  import { ContentField, InputField, SubmitButton } from "$lib/components";
 
   /** @type {{ postId: number, onupdate: () => void }} */
   const { postId, onupdate } = $props();
@@ -51,7 +49,12 @@
   <form onsubmit={submit} novalidate>
     <div class="meta">
       <div class="author">
-        <InputField label="닉네임" type="text" bind:value={author} bind:error={authorError} />
+        <InputField
+          label="닉네임"
+          type="text"
+          bind:value={author}
+          bind:error={authorError}
+        />
       </div>
       <div class="password">
         <InputField
