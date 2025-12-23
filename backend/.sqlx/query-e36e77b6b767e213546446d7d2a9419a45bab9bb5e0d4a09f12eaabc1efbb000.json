@@ -1,0 +1,64 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT \n            p.id,\n            p.author_name,\n            p.author_hash,\n            p.category_id,\n            c.name AS category_name,\n            p.title,\n            p.content,\n            p.created_at\n        FROM posts p\n        INNER JOIN categories c ON p.category_id = c.id\n        WHERE p.id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "author_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "author_hash",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "category_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "category_name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "content",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "e36e77b6b767e213546446d7d2a9419a45bab9bb5e0d4a09f12eaabc1efbb000"
+}
