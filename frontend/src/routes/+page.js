@@ -31,9 +31,7 @@ export async function load({ fetch, url }) {
   const pages = getPagination(currentPage, pageCount);
 
   return {
-    title: currentCategory?.name ?? "",
-    description: "",
-    ogtype: "website",
+    title: currentCategory.name,
     categories,
     currentCategory,
     pages,

@@ -11,8 +11,7 @@ export async function load({ fetch, params }) {
     return {
       title: post.title,
       description: post.content,
-      ogmeta: {
-        type: "article",
+      article: {
         publishedTime: post.createdAt,
         section: post.category.name,
       },

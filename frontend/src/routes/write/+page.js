@@ -6,8 +6,6 @@ export async function load({ fetch }) {
 
   return {
     title: "게시글 작성",
-    description: "",
-    ogtype: "website",
     categories,
   };
 }

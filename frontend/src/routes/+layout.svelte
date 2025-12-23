@@ -6,7 +6,11 @@
   import { onMount } from "svelte";
 
   const { children } = $props();
-  const { title, description, article } = page.data;
+  const {
+    title,
+    description = "앙고나무숲: 천안중앙고등학교 익명 커뮤니티. SW융합부 개발",
+    article,
+  } = page.data;
   const canonicalHref = new URL(page.url.pathname, page.url.origin).href;
 
   const images = [
@@ -63,13 +67,18 @@
   style:--bg-image={bgImage}
 >
   <div class="mx-auto grid max-w-7xl md:gap-8 md:p-16">
-    <header class="p-4 md:p-0">
+    <header class="flex items-center justify-between p-4 md:p-0">
       <h1>
         <a
           class="text-bg text-4xl font-semibold text-shadow-lg/20 md:text-6xl"
           href={resolve("/")}>앙고나무숲</a
         >
       </h1>
+      <a href="https://github.com/caja-sw/agforest" target="_blank">
+        <div class="glass p-2">
+          <span>GitHub</span>
+        </div>
+      </a>
     </header>
     <main>{@render children()}</main>
   </div>
