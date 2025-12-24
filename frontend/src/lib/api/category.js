@@ -1,4 +1,4 @@
-import { API_BASE } from "./util";
+import { resolveAPI } from "./util";
 
 /**
  * 카테고리 목록 조회
@@ -6,7 +6,7 @@ import { API_BASE } from "./util";
  * @returns {Promise<{ categories: Category[] }>}
  */
 export async function getCategories(fetch = window.fetch) {
-  const res = await fetch(`${API_BASE}/categories`);
+  const res = await fetch(resolveAPI("categories"));
 
   if (!res.ok) return Promise.reject(res);
 

@@ -24,9 +24,6 @@ services:
 
       DATABASE_URL: postgres://agforest:agforest@database:5432/agforest
 
-      PUBLIC_AGFOREST_INTERNAL_API_URL: http://localhost:5173/api
-      PUBLIC_AGFOREST_EXTERNAL_API_URL: http://localhost:5173/api
-
   database:
     image: postgres:17-trixie
     volumes:

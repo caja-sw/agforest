@@ -1,8 +1,9 @@
 <script>
   import "./layout.css";
 
-  import { asset, resolve } from "$app/paths";
+  import { resolve } from "$app/paths";
   import { page } from "$app/state";
+  import { backgroundImages } from "$lib/backgrounds";
   import { onMount } from "svelte";
 
   const { children } = $props();
@@ -13,28 +14,14 @@
   } = page.data;
   const canonicalHref = new URL(page.url.pathname, page.url.origin).href;
 
-  const images = [
-    asset("/images/school-01.jpg"),
-    asset("/images/school-02.jpg"),
-    asset("/images/school-03.jpg"),
-    asset("/images/school-04.jpg"),
-    asset("/images/school-05.jpg"),
-    asset("/images/school-06.jpg"),
-    asset("/images/school-07.jpg"),
-    asset("/images/school-08.jpg"),
-    asset("/images/school-09.jpg"),
-    asset("/images/school-10.jpg"),
-    asset("/images/school-11.jpg"),
-  ];
-
-  let bgImageUrl = $state(images[0]);
+  let bgImageUrl = $state(backgroundImages[0]);
   const bgImage = $derived(`url(${bgImageUrl})`);
 
   onMount(() => {
     let index = 1;
     const id = setInterval(() => {
-      bgImageUrl = images[index];
-      index = (index + 1) % images.length;
+      bgImageUrl = backgroundImages[index];
+      index = (index + 1) % backgroundImages.length;
     }, 5000);
     return () => clearInterval(id);
   });
@@ -56,7 +43,7 @@
   {:else}
     <meta property="og:type" content="website" />
   {/if}
-  {#each images as image (image)}
+  {#each backgroundImages as image (image)}
     <link rel="preload" as="image" href={image} />
   {/each}
 </svelte:head>

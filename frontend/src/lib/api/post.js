@@ -1,4 +1,4 @@
-import { API_BASE, jsonHeader } from "./util";
+import { jsonHeader, resolveAPI } from "./util";
 
 /**
  * 게시글 생성
@@ -15,7 +15,7 @@ export async function createPost(
   { categoryId, author, password, title, content },
   fetch = window.fetch,
 ) {
-  const res = await fetch(`${API_BASE}/categories/${categoryId}/posts`, {
+  const res = await fetch(resolveAPI(`categories/${categoryId}/posts`), {
     method: "POST",
     headers: jsonHeader,
     body: JSON.stringify({ author, password, title, content }),
@@ -31,20 +31,20 @@ export async function createPost(
  *
  * @param {Object} param0
  * @param {number} param0.categoryId
- * @param {number} param0.offset
  * @param {number} param0.limit
+ * @param {number} param0.offset
  * @returns {Promise<{ totalCount: number, posts: PostListItem[] }>}
  */
 export async function getPosts(
-  { categoryId, offset, limit },
+  { categoryId, limit, offset },
   fetch = window.fetch,
 ) {
   const params = new URLSearchParams({
-    offset: String(offset),
     limit: String(limit),
+    offset: String(offset),
   });
   const res = await fetch(
-    `${API_BASE}/categories/${categoryId}/posts?${params}`,
+    resolveAPI(`categories/${categoryId}/posts?${params}`),
   );
 
   if (!res.ok) return Promise.reject(res);
@@ -60,7 +60,7 @@ export async function getPosts(
  * @returns {Promise<Post>}
  */
 export async function getPost({ id }, fetch = window.fetch) {
-  const res = await fetch(`${API_BASE}/posts/${id}`);
+  const res = await fetch(resolveAPI(`posts/${id}`));
 
   if (!res.ok) return Promise.reject(res);
 
@@ -76,7 +76,7 @@ export async function getPost({ id }, fetch = window.fetch) {
  * @returns {Promise<void>}
  */
 export async function deletePost({ id, password }, fetch = window.fetch) {
-  const res = await fetch(`${API_BASE}/posts/${id}`, {
+  const res = await fetch(resolveAPI(`posts/${id}`), {
     method: "DELETE",
     headers: { Password: password },
   });

@@ -1,4 +1,4 @@
-import { API_BASE, jsonHeader } from "./util";
+import { jsonHeader, resolveAPI } from "./util";
 
 /**
  * 댓글 생성
@@ -14,7 +14,7 @@ export async function createComment(
   { postId, author, password, content },
   fetch = window.fetch,
 ) {
-  const res = await fetch(`${API_BASE}/posts/${postId}/comments`, {
+  const res = await fetch(resolveAPI(`posts/${postId}/comments`), {
     method: "POST",
     headers: jsonHeader,
     body: JSON.stringify({ author, password, content }),
@@ -32,7 +32,7 @@ export async function createComment(
  * @returns {Promise<void>}
  */
 export async function deleteComment({ id, password }, fetch = window.fetch) {
-  const res = await fetch(`${API_BASE}/comments/${id}`, {
+  const res = await fetch(resolveAPI(`comments/${id}`), {
     method: "DELETE",
     headers: { Password: password },
   });
