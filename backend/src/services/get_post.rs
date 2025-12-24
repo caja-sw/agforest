@@ -16,7 +16,6 @@ pub async fn get_post(
     pool: web::Data<Pool<Postgres>>,
 ) -> actix_web::Result<impl Responder> {
     let post_id = path.into_inner();
-    let mut tx = pool.begin().await.map_err(ErrorInternalServerError)?;
 
     let post = sqlx::query_as!(
         PostEntity,
@@ -36,7 +35,7 @@ pub async fn get_post(
         "#,
         post_id
     )
-    .fetch_optional(&mut *tx)
+    .fetch_optional(pool.get_ref())
     .await
     .map_err(ErrorInternalServerError)?
     .ok_or_else(|| ErrorNotFound("Post not found"))?;
@@ -56,11 +55,9 @@ pub async fn get_post(
         "#,
         post_id
     )
-    .fetch_all(&mut *tx)
+    .fetch_all(pool.get_ref())
     .await
     .map_err(ErrorInternalServerError)?;
-
-    tx.commit().await.map_err(ErrorInternalServerError)?;
 
     Ok(HttpResponse::Ok().json(Response::from((post, comments))))
 }

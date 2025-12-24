@@ -4,6 +4,7 @@
   import { deletePost } from "$lib/api";
   import { DeleteButton } from "$lib/components";
 
+  /** @type {{ post: Post }} */
   const { post } = $props();
 
   let deleting = $state(false);
@@ -37,7 +38,10 @@
 
 <article class="glass p-6">
   <header class="grid gap-2">
-    <h1 class="text-3xl">{post.title}</h1>
+    <div>
+      <span class="text-text-muted text-sm">{post.category.name}</span>
+      <h1 class="text-3xl leading-none">{post.title}</h1>
+    </div>
     <div class="text-text-muted flex flex-wrap justify-between gap-x-4">
       <span>{post.author.name}#{post.author.hash.slice(0, 6)}</span>
       <time>{new Date(post.createdAt).toLocaleString()}</time>

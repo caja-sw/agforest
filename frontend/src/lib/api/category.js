@@ -3,12 +3,7 @@ import { API_BASE } from "./util";
 /**
  * 카테고리 목록 조회
  *
- * @returns {Promise<{
- *   categories: {
- *     id: number,
- *     name: string
- *   }[]
- * }>}
+ * @returns {Promise<{ categories: Category[] }>}
  */
 export async function getCategories(fetch = window.fetch) {
   const res = await fetch(`${API_BASE}/categories`);

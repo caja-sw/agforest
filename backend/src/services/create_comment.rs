@@ -9,8 +9,7 @@ use serde_json::{Value, json};
 use sqlx::{Pool, Postgres};
 
 use crate::{
-    dto::create_comment::{Request, Response},
-    entity::create_comment::CommentEntity,
+    dto::create_comment::Request,
     helper::{get_request_hash, hash_password},
 };
 
@@ -55,8 +54,7 @@ pub async fn create_comment(
 
     let password_hash = hash_password(&password).map_err(ErrorInternalServerError)?;
 
-    let comment = sqlx::query_as!(
-        CommentEntity,
+    sqlx::query!(
         r#"
         INSERT INTO comments (
             post_id,
@@ -66,7 +64,6 @@ pub async fn create_comment(
             content
         )
         VALUES ($1, $2, $3, $4, $5)
-        RETURNING id
         "#,
         post_id,
         author_name,
@@ -74,7 +71,7 @@ pub async fn create_comment(
         password_hash,
         content
     )
-    .fetch_one(pool.get_ref())
+    .execute(pool.get_ref())
     .await
     .map_err(|err| {
         if err
@@ -87,5 +84,5 @@ pub async fn create_comment(
         }
     })?;
 
-    Ok(HttpResponse::Created().json(Response::from(comment)))
+    Ok(HttpResponse::Created().finish())
 }
