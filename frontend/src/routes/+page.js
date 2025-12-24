@@ -21,10 +21,10 @@ export async function load({ fetch, url }) {
     return Number(param);
   })();
 
-  const offset = (currentPage - 1) * PAGE_ITEM_COUNT;
   const limit = PAGE_ITEM_COUNT;
+  const offset = (currentPage - 1) * PAGE_ITEM_COUNT;
   const { totalCount = 0, posts = [] } = currentCategory
-    ? await getPosts({ categoryId: currentCategory.id, offset, limit }, fetch)
+    ? await getPosts({ categoryId: currentCategory.id, limit, offset }, fetch)
     : {};
 
   const maxPage = Math.max(Math.ceil(totalCount / PAGE_ITEM_COUNT), 1);
