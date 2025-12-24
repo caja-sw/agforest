@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT\n            password_hash\n        FROM comments\n        WHERE id = $1\n        ",
+  "query": "\n        SELECT\n            password_hash\n        FROM comments\n        WHERE id = $1\n        FOR UPDATE\n        ",
   "describe": {
     "columns": [
       {
@@ -18,5 +18,5 @@
       false
     ]
   },
-  "hash": "ece50288ded317dd44643cf19c99f79a76968600de111bae002aec23252f8727"
+  "hash": "83eae973d98415a6dc3ba55b848d43fbe8b8541dad6186b3455d1d1687f0ff99"
 }
