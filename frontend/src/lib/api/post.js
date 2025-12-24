@@ -33,19 +33,7 @@ export async function createPost(
  * @param {number} param0.categoryId
  * @param {number} param0.offset
  * @param {number} param0.limit
- * @returns {Promise<{
- *   totalCount: number,
- *   posts: {
- *     id: number,
- *     author: {
- *       name: string,
- *       hash: string
- *     },
- *     title: string,
- *     createdAt: string,
- *     commentCount: number
- *   }[]
- * }>}
+ * @returns {Promise<{ totalCount: number, posts: PostListItem[] }>}
  */
 export async function getPosts(
   { categoryId, offset, limit },
@@ -69,29 +57,7 @@ export async function getPosts(
  *
  * @param {Object} param0
  * @param {number} param0.id
- * @returns {Promise<{
- *   id: number,
- *   category: {
- *     id: number,
- *     name: string
- *   },
- *   author: {
- *     name: string,
- *     hash: string
- *   },
- *   title: string,
- *   content: string,
- *   createdAt: string,
- *   comments: {
- *     id: number,
- *     author: {
- *       name: string,
- *       hash: string,
- *     },
- *     content: string,
- *     createdAt: string
- *   }[]
- * }>}
+ * @returns {Promise<Post>}
  */
 export async function getPost({ id }, fetch = window.fetch) {
   const res = await fetch(`${API_BASE}/posts/${id}`);

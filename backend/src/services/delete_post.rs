@@ -25,6 +25,7 @@ pub async fn delete_post(
             password_hash
         FROM posts
         WHERE id = $1
+        FOR UPDATE
         "#,
         post_id
     )

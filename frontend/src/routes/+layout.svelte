@@ -27,19 +27,15 @@
     asset("/images/school-11.jpg"),
   ];
 
-  let bgImage = $state("");
+  let bgImageUrl = $state(images[0]);
+  const bgImage = $derived(`url(${bgImageUrl})`);
 
   onMount(() => {
-    let index = 0;
-    function setImage() {
-      bgImage = `url(${images[index]})`;
+    let index = 1;
+    const id = setInterval(() => {
+      bgImageUrl = images[index];
       index = (index + 1) % images.length;
-      const nextSrc = images[index];
-      const img = new Image();
-      img.src = nextSrc;
-    }
-    setImage();
-    const id = setInterval(setImage, 5000);
+    }, 5000);
     return () => clearInterval(id);
   });
 </script>
@@ -60,6 +56,9 @@
   {:else}
     <meta property="og:type" content="website" />
   {/if}
+  {#each images as image (image)}
+    <link rel="preload" as="image" href={image} />
+  {/each}
 </svelte:head>
 
 <div

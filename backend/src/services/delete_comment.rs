@@ -25,6 +25,7 @@ pub async fn delete_comment(
             password_hash
         FROM comments
         WHERE id = $1
+        FOR UPDATE
         "#,
         comment_id
     )

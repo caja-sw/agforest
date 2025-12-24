@@ -9,11 +9,11 @@ pub struct Response {
     pub posts: Vec<Post>,
 }
 
-impl From<Vec<PostEntity>> for Response {
-    fn from(value: Vec<PostEntity>) -> Self {
+impl From<(i64, Vec<PostEntity>)> for Response {
+    fn from((total_count, posts): (i64, Vec<PostEntity>)) -> Self {
         Self {
-            total_count: value.first().map_or(0, |post| post.total_count),
-            posts: value.into_iter().map(Post::from).collect(),
+            total_count,
+            posts: posts.into_iter().map(Post::from).collect(),
         }
     }
 }

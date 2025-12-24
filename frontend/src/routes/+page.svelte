@@ -2,7 +2,7 @@
   import { resolve } from "$app/paths";
 
   const { data } = $props();
-  const { categories, currentCategory, pages, currentPage, posts } =
+  const { categories, currentCategory, currentPage, maxPage, pages, posts } =
     $derived(data);
 
   /**
@@ -53,7 +53,10 @@
   </nav>
 
   <section class="glass grid gap-6 py-6">
-    <h1 class="px-6 text-2xl leading-none">{currentCategory.name}</h1>
+    <header class="flex items-center justify-between px-6">
+      <h1 class="text-2xl leading-none">{currentCategory.name}</h1>
+      <span class="text-text-muted">{currentPage}/{maxPage} 페이지</span>
+    </header>
 
     <div class="card p-4 md:mx-6">
       {#if posts.length > 0}
@@ -100,27 +103,25 @@
     </div>
   </section>
 
-  {#if posts.length > 0}
-    <nav class="glass p-4">
-      <ul class="flex flex-row justify-center gap-5">
-        {#each pages as page (page)}
-          <li>
-            <!-- eslint-disable svelte/no-navigation-without-resolve -->
-            <a
-              class={[
-                "grid size-10 place-items-center rounded-full font-bold outline",
-                page === currentPage
-                  ? "bg-primary text-bg"
-                  : "bg-bg text-text-muted",
-              ]}
-              href={`${resolve("/")}?c=${currentCategory.id}&p=${page}`}
-            >
-              <span>{page}</span>
-            </a>
-            <!-- eslint-enable svelte/no-navigation-without-resolve -->
-          </li>
-        {/each}
-      </ul>
-    </nav>
-  {/if}
+  <nav class="glass p-4">
+    <ul class="flex flex-row justify-center gap-5">
+      {#each pages as page (page)}
+        <li>
+          <!-- eslint-disable svelte/no-navigation-without-resolve -->
+          <a
+            class={[
+              "grid size-10 place-items-center rounded-full font-bold outline",
+              page === currentPage
+                ? "bg-primary text-bg"
+                : "bg-bg text-text-muted",
+            ]}
+            href={`${resolve("/")}?c=${currentCategory.id}&p=${page}`}
+          >
+            <span>{page}</span>
+          </a>
+          <!-- eslint-enable svelte/no-navigation-without-resolve -->
+        </li>
+      {/each}
+    </ul>
+  </nav>
 </div>

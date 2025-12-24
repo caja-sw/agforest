@@ -27,15 +27,16 @@ export async function load({ fetch, url }) {
     ? await getPosts({ categoryId: currentCategory.id, offset, limit }, fetch)
     : {};
 
-  const pageCount = Math.ceil(totalCount / PAGE_ITEM_COUNT);
-  const pages = getPagination(currentPage, pageCount);
+  const maxPage = Math.max(Math.ceil(totalCount / PAGE_ITEM_COUNT), 1);
+  const pages = getPagination(currentPage, maxPage);
 
   return {
     title: currentCategory.name,
     categories,
     currentCategory,
-    pages,
     currentPage,
+    maxPage,
+    pages,
     posts,
   };
 }
@@ -44,30 +45,30 @@ export async function load({ fetch, url }) {
  * 페이지 리스트 생성
  *
  * @param {number} currentPage
- * @param {number} pageCount
- * @param {number} maxPages
+ * @param {number} maxPage
+ * @param {number} maxPageCount
  * @returns {number[]}
  */
-function getPagination(currentPage, pageCount, maxPages = 9) {
-  if (pageCount <= 0) return [];
+function getPagination(currentPage, maxPage, maxPageCount = 5) {
+  if (maxPage <= 0) return [];
 
   const pages = [];
   let startPage, endPage;
 
-  if (pageCount <= maxPages) {
+  if (maxPage <= maxPageCount) {
     startPage = 1;
-    endPage = pageCount;
+    endPage = maxPage;
   } else {
-    const half = Math.floor(maxPages / 2);
+    const half = Math.floor(maxPageCount / 2);
     if (currentPage <= half) {
       startPage = 1;
-      endPage = maxPages;
-    } else if (currentPage + half >= pageCount) {
-      startPage = pageCount - maxPages + 1;
-      endPage = pageCount;
+      endPage = maxPageCount;
+    } else if (currentPage + half >= maxPage) {
+      startPage = maxPage - maxPageCount + 1;
+      endPage = maxPage;
     } else {
       startPage = currentPage - half;
-      endPage = currentPage + half - 1 + (maxPages % 2);
+      endPage = currentPage + half - 1 + (maxPageCount % 2);
     }
   }
 

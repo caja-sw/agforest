@@ -3,7 +3,7 @@
   import { deleteComment } from "$lib/api";
   import { DeleteButton } from "$lib/components";
 
-  /** @type {{ comments: { id: number, author: { name: string, hash: string }, content: string, createdAt: string }[] }} */
+  /** @type {{ comments: CommentListItem[] }} */
   const { comments } = $props();
 
   let deleting = $state(false);

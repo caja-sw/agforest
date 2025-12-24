@@ -1,4 +1,3 @@
-pub mod create_comment;
 pub mod create_post;
 pub mod delete_comment;
 pub mod delete_post;
