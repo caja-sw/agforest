@@ -3,7 +3,6 @@ import { error } from "@sveltejs/kit";
 
 export async function load({ fetch, params }) {
   try {
-    if (!/^\d+$/.test(params.id)) error(404);
     const id = Number(params.id);
     const post = await getPost({ id }, fetch);
 
