@@ -1,7 +1,6 @@
 import { getPost } from "$lib/api";
 import { error } from "@sveltejs/kit";
 
-/** @type {import("./$types").PageLoad} */
 export async function load({ fetch, params }) {
   try {
     if (!/^\d+$/.test(params.id)) error(404);

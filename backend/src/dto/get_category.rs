@@ -1,18 +1,25 @@
 use serde::Serialize;
 
-use crate::{dto::Author, entity::get_posts::PostEntity};
+use crate::{
+    dto::Author,
+    entity::get_category::{CategoryEntity, PostEntity},
+};
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Response {
-    pub total_count: i64,
+    pub id: i64,
+    pub name: String,
+    pub total_post_count: i64,
     pub posts: Vec<Post>,
 }
 
-impl From<(i64, Vec<PostEntity>)> for Response {
-    fn from((total_count, posts): (i64, Vec<PostEntity>)) -> Self {
+impl From<(CategoryEntity, i64, Vec<PostEntity>)> for Response {
+    fn from((category, total_post_count, posts): (CategoryEntity, i64, Vec<PostEntity>)) -> Self {
         Self {
-            total_count,
+            id: category.id,
+            name: category.name,
+            total_post_count,
             posts: posts.into_iter().map(Post::from).collect(),
         }
     }

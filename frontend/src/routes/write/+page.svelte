@@ -11,10 +11,10 @@
   import { getErrorMessagesFromCreatePostConstraints } from "$lib/helper/get-error-messages.js";
 
   const { data } = $props();
-  const { categories } = $derived(data);
+  const { categories, category: initialCategory } = $derived(data);
 
   // svelte-ignore state_referenced_locally
-  let category = $state(categories[0]);
+  let category = $state(initialCategory);
   let author = $state("");
   let password = $state("");
   let title = $state("");

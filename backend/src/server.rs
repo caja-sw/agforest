@@ -26,7 +26,7 @@ pub fn start_server(config: &Config) -> Result<()> {
                 .wrap(TracingLogger::default())
                 .app_data(web::Data::new(pool.clone()))
                 .service(services::get_categories)
-                .service(services::get_posts)
+                .service(services::get_category)
                 .service(services::get_post)
                 .service(services::create_post)
                 .service(services::create_comment)

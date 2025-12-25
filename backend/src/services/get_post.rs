@@ -4,6 +4,7 @@ use actix_web::{
     get, web,
 };
 use sqlx::{Pool, Postgres};
+use tokio::try_join;
 
 use crate::{
     dto::get_post::Response,
@@ -35,10 +36,7 @@ pub async fn get_post(
         "#,
         post_id
     )
-    .fetch_optional(pool.get_ref())
-    .await
-    .map_err(ErrorInternalServerError)?
-    .ok_or_else(|| ErrorNotFound("Post not found"))?;
+    .fetch_optional(pool.get_ref());
 
     let comments = sqlx::query_as!(
         CommentEntity,
@@ -55,9 +53,10 @@ pub async fn get_post(
         "#,
         post_id
     )
-    .fetch_all(pool.get_ref())
-    .await
-    .map_err(ErrorInternalServerError)?;
+    .fetch_all(pool.get_ref());
+
+    let (post, comments) = try_join!(post, comments).map_err(ErrorInternalServerError)?;
+    let post = post.ok_or(ErrorNotFound("Post not found"))?;
 
     Ok(HttpResponse::Ok().json(Response::from((post, comments))))
 }

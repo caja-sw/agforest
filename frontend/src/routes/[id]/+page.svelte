@@ -2,8 +2,7 @@
   import { resolve } from "$app/paths";
 
   const { data } = $props();
-  const { categories, currentCategory, currentPage, maxPage, pages, posts } =
-    $derived(data);
+  const { categories, category, currentPage, maxPage, pages } = $derived(data);
 
   /**
    * @param {Date} date
@@ -37,31 +36,36 @@
     <ul class="flex">
       {#each categories as category (category.id)}
         <li>
-          <!-- eslint-disable svelte/no-navigation-without-resolve -->
           <a
             class="block p-2 leading-none"
-            href={`${resolve("/")}?c=${category.id}`}>{category.name}</a
+            href={resolve("/[id]", { id: String(category.id) })}
+            >{category.name}</a
           >
-          <!-- eslint-enable svelte/no-navigation-without-resolve -->
         </li>
       {/each}
     </ul>
 
     <div class="flex">
-      <a class="block p-2 leading-none" href={resolve("/write")}>게시글 쓰기</a>
+      <!-- eslint-disable svelte/no-navigation-without-resolve -->
+      <a
+        class="block p-2 leading-none"
+        href={`${resolve("/write")}?${new URLSearchParams({ c: String(category.id) })}`}
+        >게시글 쓰기</a
+      >
+      <!-- eslint-enable svelte/no-navigation-without-resolve -->
     </div>
   </nav>
 
   <section class="glass grid gap-6 py-6">
     <header class="flex items-center justify-between px-6">
-      <h1 class="text-2xl leading-none">{currentCategory.name}</h1>
+      <h1 class="text-2xl leading-none">{category.name}</h1>
       <span class="text-text-muted">{currentPage}/{maxPage} 페이지</span>
     </header>
 
     <div class="card p-4 md:mx-6">
-      {#if posts.length > 0}
+      {#if category.posts.length > 0}
         <ul>
-          {#each posts as post (post.id)}
+          {#each category.posts as post (post.id)}
             <li>
               <a href={resolve("/post/[id]", { id: String(post.id) })}>
                 <section
@@ -115,7 +119,7 @@
                 ? "bg-primary text-bg"
                 : "bg-bg text-text-muted",
             ]}
-            href={`${resolve("/")}?c=${currentCategory.id}&p=${page}`}
+            href={`${resolve("/[id]", { id: String(category.id) })}?${new URLSearchParams({ p: String(page) })}`}
           >
             <span>{page}</span>
           </a>

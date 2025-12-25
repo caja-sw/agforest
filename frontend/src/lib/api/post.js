@@ -27,32 +27,6 @@ export async function createPost(
 }
 
 /**
- * 게시글 목록 조회
- *
- * @param {Object} param0
- * @param {number} param0.categoryId
- * @param {number} param0.limit
- * @param {number} param0.offset
- * @returns {Promise<{ totalCount: number, posts: PostListItem[] }>}
- */
-export async function getPosts(
-  { categoryId, limit, offset },
-  fetch = window.fetch,
-) {
-  const params = new URLSearchParams({
-    limit: String(limit),
-    offset: String(offset),
-  });
-  const res = await fetch(
-    resolveAPI(`categories/${categoryId}/posts?${params}`),
-  );
-
-  if (!res.ok) return Promise.reject(res);
-
-  return await res.json();
-}
-
-/**
  * 게시글 조회
  *
  * @param {Object} param0
