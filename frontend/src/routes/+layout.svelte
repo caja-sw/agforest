@@ -7,12 +7,15 @@
   import { onMount } from "svelte";
 
   const { children } = $props();
+  const error = $derived(page.error);
   const {
     title,
     description = "앙고나무숲: 천안중앙고등학교 익명 커뮤니티. SW융합부 개발",
     article,
-  } = page.data;
-  const canonicalHref = new URL(page.url.pathname, page.url.origin).href;
+  } = $derived(page.data);
+  const canonicalHref = $derived(
+    new URL(page.url.pathname, page.url.origin).href,
+  );
 
   let bgImageUrl = $state(backgroundImages[0]);
   const bgImage = $derived(`url(${bgImageUrl})`);
@@ -28,20 +31,23 @@
 </script>
 
 <svelte:head>
-  <title>{title} — 앙고나무숲</title>
+  <title>{!error ? title : page.status} — 앙고나무숲</title>
   <meta name="description" content={description} />
   <meta name="color-scheme" content="light" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content={!error ? "index, follow" : "noindex nofollow"} />
   <meta property="og:site_name" content="앙고나무숲" />
-  <meta property="og:title" content={title} />
-  <meta property="og:description" content={description} />
-  <meta property="og:url" content={canonicalHref} />
-  {#if article}
-    <meta property="og:type" content="article" />
-    <meta property="article:published_time" content={article.publishedTime} />
-    <meta property="article:section" content={article.section} />
-  {:else}
-    <meta property="og:type" content="website" />
+  {#if !error}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalHref} />
+    {#if article}
+      <meta property="og:type" content="article" />
+      <meta property="article:published_time" content={article.publishedTime} />
+      <meta property="article:section" content={article.section} />
+    {:else}
+      <meta property="og:type" content="website" />
+    {/if}
+    <link rel="canonical" href={canonicalHref} />
   {/if}
   {#each backgroundImages as image (image)}
     <link rel="preload" as="image" href={image} />
