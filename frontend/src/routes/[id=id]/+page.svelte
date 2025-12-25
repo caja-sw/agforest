@@ -38,7 +38,7 @@
         <li>
           <a
             class="block p-2 leading-none"
-            href={resolve("/[id]", { id: String(category.id) })}
+            href={resolve("/[id=id]", { id: String(category.id) })}
             >{category.name}</a
           >
         </li>
@@ -67,7 +67,7 @@
         <ul>
           {#each category.posts as post (post.id)}
             <li>
-              <a href={resolve("/post/[id]", { id: String(post.id) })}>
+              <a href={resolve("/post/[id=id]", { id: String(post.id) })}>
                 <section
                   class="hover:bg-text/5 grid grid-cols-[1fr_auto] gap-4 py-1"
                 >
@@ -119,7 +119,7 @@
                 ? "bg-primary text-bg"
                 : "bg-bg text-text-muted",
             ]}
-            href={`${resolve("/[id]", { id: String(category.id) })}?${new URLSearchParams({ p: String(page) })}`}
+            href={`${resolve("/[id=id]", { id: String(category.id) })}?${new URLSearchParams({ p: String(page) })}`}
           >
             <span>{page}</span>
           </a>

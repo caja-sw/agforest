@@ -41,7 +41,7 @@
         title,
         content,
       });
-      goto(resolve("/post/[id]", { id: String(id) }));
+      goto(resolve("/post/[id=id]", { id: String(id) }));
     } catch (errRes) {
       if (!(errRes instanceof Response)) throw errRes;
 

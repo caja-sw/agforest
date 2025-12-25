@@ -5,7 +5,6 @@ const PAGE_ITEM_COUNT = 20;
 
 export async function load({ fetch, url, params }) {
   try {
-    if (!/^\d+$/.test(params.id)) error(404);
     const id = Number(params.id);
 
     const pParam = url.searchParams.get("p");
