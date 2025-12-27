@@ -1,23 +1,9 @@
-name: CI Check
+name: CI
 
 on:
   pull_request:
 
 jobs:
-  clippy:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend
-    steps:
-      - uses: actions/checkout@v6
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: clippy
-      - run: cargo clippy -- -D warnings
-        env:
-          SQLX_OFFLINE: true
-
   fmt:
     runs-on: ubuntu-latest
     defaults:
@@ -29,6 +15,20 @@ jobs:
         with:
           components: rustfmt
       - run: cargo fmt -- --check
+
+  clippy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - run: cargo clippy --locked -- -D warnings
+        env:
+          SQLX_OFFLINE: true
 
   frontend:
     runs-on: ubuntu-latest
