@@ -22,10 +22,11 @@ pub async fn delete_post(
         PostEntity,
         r#"
         SELECT
-            password_hash
-        FROM posts
-        WHERE id = $1
-        FOR UPDATE
+            p.password_hash
+        FROM posts p
+        JOIN categories c ON p.category_id = c.id
+        WHERE p.id = $1 AND p.deleted_at IS NULL AND c.readonly = false 
+        FOR UPDATE OF p;
         "#,
         post_id
     )
@@ -42,8 +43,8 @@ pub async fn delete_post(
 
     sqlx::query!(
         r#"
-        DELETE
-        FROM posts
+        UPDATE posts
+        SET deleted_at = NOW()
         WHERE id = $1
         "#,
         post_id

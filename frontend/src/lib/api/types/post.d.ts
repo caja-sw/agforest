@@ -14,6 +14,7 @@ interface Post {
   category: {
     id: number;
     name: string;
+    readonly: boolean;
   };
   author: {
     name: string;

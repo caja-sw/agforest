@@ -1,0 +1,27 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO posts (\n            category_id,\n            author_name,\n            author_hash,\n            password_hash,\n            title,\n            content\n        )\n        SELECT $1, $2, $3, $4, $5, $6\n        FROM categories\n        WHERE id = $1 AND readonly = false\n        RETURNING id\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "0558f567f5a53ba35b027f86285658384067cf1251b35506e9c636bf9c8a64de"
+}

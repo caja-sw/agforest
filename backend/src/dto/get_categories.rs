@@ -2,8 +2,6 @@ use serde::Serialize;
 
 use crate::entity::get_categories::CategoryEntity;
 
-use super::Category;
-
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Response {
@@ -15,11 +13,20 @@ impl From<Vec<CategoryEntity>> for Response {
         Self {
             categories: value
                 .into_iter()
-                .map(|req| Category {
-                    id: req.id,
-                    name: req.name,
+                .map(|category| Category {
+                    id: category.id,
+                    name: category.name,
+                    readonly: category.readonly,
                 })
                 .collect(),
         }
     }
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Category {
+    pub id: i64,
+    pub name: String,
+    pub readonly: bool,
 }

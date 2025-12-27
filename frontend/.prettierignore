@@ -1,3 +1,3 @@
-/.devcontainer/
+/.devcontainer
 /package-lock.json
-/static/
+/static

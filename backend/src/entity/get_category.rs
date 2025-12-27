@@ -5,12 +5,12 @@ use serde::Deserialize;
 pub struct CategoryEntity {
     pub id: i64,
     pub name: String,
+    pub readonly: bool,
+    pub total_post_count: i64,
 }
 
 #[derive(Deserialize)]
 pub struct PostEntity {
-    pub total_post_count: i64,
-
     pub id: i64,
     pub author_name: String,
     pub author_hash: String,

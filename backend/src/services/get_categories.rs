@@ -8,7 +8,10 @@ pub async fn get_categories(pool: web::Data<Pool<Postgres>>) -> actix_web::Resul
     let categories = sqlx::query_as!(
         CategoryEntity,
         r#"
-        SELECT id, name
+        SELECT
+            id,
+            name,
+            readonly
         FROM categories
         "#
     )

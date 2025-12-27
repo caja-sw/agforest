@@ -4,13 +4,14 @@
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
   import { backgroundImages } from "$lib/backgrounds";
+  import { SITE_NAME } from "$lib/constants";
   import { onMount } from "svelte";
 
   const { children } = $props();
   const error = $derived(page.error);
   const {
     title,
-    description = "앙고나무숲: 천안중앙고등학교 익명 커뮤니티. SW융합부 개발",
+    description = "앙고나무숲 — 천안중앙고등학교 익명 커뮤니티. SW융합부 개발",
     article,
   } = $derived(page.data);
   const canonicalHref = $derived(
@@ -31,11 +32,11 @@
 </script>
 
 <svelte:head>
-  <title>{!error ? title : page.status} — 앙고나무숲</title>
+  <title>{!error ? title : page.status} — {SITE_NAME}</title>
   <meta name="description" content={description} />
   <meta name="color-scheme" content="light" />
   <meta name="robots" content={!error ? "index, follow" : "noindex nofollow"} />
-  <meta property="og:site_name" content="앙고나무숲" />
+  <meta property="og:site_name" content={SITE_NAME} />
   {#if !error}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -63,7 +64,7 @@
       <h1>
         <a
           class="text-bg text-4xl font-semibold text-shadow-lg/20 md:text-6xl"
-          href={resolve("/")}>앙고나무숲</a
+          href={resolve("/")}>{SITE_NAME}</a
         >
       </h1>
       <a href="https://github.com/caja-sw/agforest" target="_blank">
