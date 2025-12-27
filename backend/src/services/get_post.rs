@@ -27,12 +27,13 @@ pub async fn get_post(
             p.author_hash,
             p.category_id,
             c.name AS category_name,
+            c.readonly AS category_readonly,
             p.title,
             p.content,
             p.created_at
         FROM posts p
         INNER JOIN categories c ON p.category_id = c.id
-        WHERE p.id = $1
+        WHERE p.id = $1 AND p.deleted_at IS NULL
         "#,
         post_id
     )
@@ -48,7 +49,7 @@ pub async fn get_post(
             content,
             created_at
         FROM comments
-        WHERE post_id = $1
+        WHERE post_id = $1 AND deleted_at IS NULL
         ORDER BY created_at ASC
         "#,
         post_id

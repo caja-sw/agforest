@@ -25,7 +25,13 @@ pub async fn get_category(
         r#"
         SELECT
             id,
-            name
+            name,
+            readonly,
+            (
+                SELECT COUNT(*) 
+                FROM posts
+                WHERE category_id = $1 AND deleted_at IS NULL
+            ) AS "total_post_count!"
         FROM categories
         WHERE id = $1
         "#,
@@ -36,31 +42,17 @@ pub async fn get_category(
     let posts = sqlx::query_as!(
         PostEntity,
         r#"
-        WITH paged AS (
-            SELECT 
-                COUNT(*) OVER() AS total_post_count,
-                p.id,
-                p.author_name,
-                p.author_hash,
-                p.title,
-                p.created_at
-            FROM posts p
-            WHERE p.category_id = $1
-            ORDER BY p.created_at DESC
-            LIMIT $2 OFFSET $3
-        )
-        SELECT 
-            p.total_post_count AS "total_post_count!",
+        SELECT
             p.id,
             p.author_name,
             p.author_hash,
             p.title,
             p.created_at,
-            COUNT(c.id) AS "comment_count!"
-        FROM paged p
-        LEFT JOIN comments c ON p.id = c.post_id
-        GROUP BY p.total_post_count, p.id, p.author_name, p.author_hash, p.title, p.created_at
+            (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id AND c.deleted_at IS NULL) AS "comment_count!"
+        FROM posts p
+        WHERE category_id = $1 AND deleted_at IS NULL
         ORDER BY p.created_at DESC
+        LIMIT $2 OFFSET $3
         "#,
         category_id,
         limit,
@@ -71,23 +63,5 @@ pub async fn get_category(
     let (category, posts) = try_join!(category, posts).map_err(ErrorInternalServerError)?;
     let category = category.ok_or(ErrorNotFound("Category not found"))?;
 
-    let total_post_count = if let Some(post) = posts.first() {
-        post.total_post_count
-    } else {
-        sqlx::query!(
-            r#"
-                SELECT
-                    COUNT(*) as "total_post_count!"
-                FROM posts
-                WHERE category_id = $1
-                "#,
-            category_id
-        )
-        .fetch_one(pool.get_ref())
-        .await
-        .map_err(ErrorInternalServerError)?
-        .total_post_count
-    };
-
-    Ok(HttpResponse::Ok().json(Response::from((category, total_post_count, posts))))
+    Ok(HttpResponse::Ok().json(Response::from((category, posts))))
 }

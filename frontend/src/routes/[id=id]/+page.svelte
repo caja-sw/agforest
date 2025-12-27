@@ -46,13 +46,15 @@
     </ul>
 
     <div class="flex">
-      <!-- eslint-disable svelte/no-navigation-without-resolve -->
-      <a
-        class="block p-2 leading-none"
-        href={`${resolve("/write")}?${new URLSearchParams({ c: String(category.id) })}`}
-        >게시글 쓰기</a
-      >
-      <!-- eslint-enable svelte/no-navigation-without-resolve -->
+      {#if !category.readonly}
+        <!-- eslint-disable svelte/no-navigation-without-resolve -->
+        <a
+          class="block p-2 leading-none"
+          href={`${resolve("/write")}?${new URLSearchParams({ c: String(category.id) })}`}
+          >게시글 쓰기</a
+        >
+        <!-- eslint-enable svelte/no-navigation-without-resolve -->
+      {/if}
     </div>
   </nav>
 

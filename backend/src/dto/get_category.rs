@@ -10,16 +10,18 @@ use crate::{
 pub struct Response {
     pub id: i64,
     pub name: String,
+    pub readonly: bool,
     pub total_post_count: i64,
     pub posts: Vec<Post>,
 }
 
-impl From<(CategoryEntity, i64, Vec<PostEntity>)> for Response {
-    fn from((category, total_post_count, posts): (CategoryEntity, i64, Vec<PostEntity>)) -> Self {
+impl From<(CategoryEntity, Vec<PostEntity>)> for Response {
+    fn from((category, posts): (CategoryEntity, Vec<PostEntity>)) -> Self {
         Self {
             id: category.id,
             name: category.name,
-            total_post_count,
+            readonly: category.readonly,
+            total_post_count: category.total_post_count,
             posts: posts.into_iter().map(Post::from).collect(),
         }
     }

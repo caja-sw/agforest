@@ -24,7 +24,7 @@ pub async fn delete_comment(
         SELECT
             password_hash
         FROM comments
-        WHERE id = $1
+        WHERE id = $1 AND deleted_at IS NULL
         FOR UPDATE
         "#,
         comment_id
@@ -42,8 +42,8 @@ pub async fn delete_comment(
 
     sqlx::query!(
         r#"
-        DELETE
-        FROM comments
+        UPDATE comments
+        SET deleted_at = NOW()
         WHERE id = $1
         "#,
         comment_id

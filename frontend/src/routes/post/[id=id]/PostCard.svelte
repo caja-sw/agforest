@@ -52,7 +52,9 @@
 
   <p class="whitespace-pre-wrap">{post.content}</p>
 
-  <div class="place-self-end">
-    <DeleteButton onclick={handleDelete} disabled={deleting} />
-  </div>
+  {#if !post.category.readonly}
+    <div class="place-self-end">
+      <DeleteButton onclick={handleDelete} disabled={deleting} />
+    </div>
+  {/if}
 </article>

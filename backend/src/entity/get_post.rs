@@ -6,6 +6,7 @@ pub struct PostEntity {
     pub id: i64,
     pub category_id: i64,
     pub category_name: String,
+    pub category_readonly: bool,
     pub author_name: String,
     pub author_hash: String,
     pub title: String,

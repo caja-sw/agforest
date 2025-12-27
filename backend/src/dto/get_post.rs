@@ -1,7 +1,7 @@
 use serde::Serialize;
 
 use crate::{
-    dto::{Author, Category},
+    dto::Author,
     entity::get_post::{CommentEntity, PostEntity},
 };
 
@@ -24,6 +24,7 @@ impl From<(PostEntity, Vec<CommentEntity>)> for Response {
             category: Category {
                 id: post.category_id,
                 name: post.category_name,
+                readonly: post.category_readonly,
             },
             author: Author {
                 name: post.author_name,
@@ -35,6 +36,14 @@ impl From<(PostEntity, Vec<CommentEntity>)> for Response {
             comments: comments.into_iter().map(Comment::from).collect(),
         }
     }
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Category {
+    pub id: i64,
+    pub name: String,
+    pub readonly: bool,
 }
 
 #[derive(Serialize)]

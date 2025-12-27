@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use actix_web::{
     HttpRequest, HttpResponse, Responder,
-    error::{ErrorInternalServerError, ErrorNotFound},
+    error::{ErrorForbidden, ErrorInternalServerError},
     post, web,
 };
 use serde_json::{Value, json};
@@ -72,7 +72,9 @@ pub async fn create_post(
             title,
             content
         )
-        VALUES ($1, $2, $3, $4, $5, $6)
+        SELECT $1, $2, $3, $4, $5, $6
+        FROM categories
+        WHERE id = $1 AND readonly = false
         RETURNING id
         "#,
         category_id,
@@ -82,18 +84,10 @@ pub async fn create_post(
         title,
         content
     )
-    .fetch_one(pool.get_ref())
+    .fetch_optional(pool.get_ref())
     .await
-    .map_err(|err| {
-        if err
-            .as_database_error()
-            .is_some_and(|err| err.constraint() == Some("posts_category_id_fkey"))
-        {
-            ErrorNotFound("Category not found")
-        } else {
-            ErrorInternalServerError(err)
-        }
-    })?;
+    .map_err(ErrorInternalServerError)?
+    .ok_or(ErrorForbidden("Category does not exist or is readonly"))?;
 
     Ok(HttpResponse::Created().json(Response::from(post)))
 }

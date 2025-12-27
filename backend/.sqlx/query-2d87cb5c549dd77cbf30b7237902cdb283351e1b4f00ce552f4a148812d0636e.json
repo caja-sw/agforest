@@ -1,0 +1,40 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n            id,\n            name,\n            readonly,\n            (\n                SELECT COUNT(*) \n                FROM posts\n                WHERE category_id = $1 AND deleted_at IS NULL\n            ) AS \"total_post_count!\"\n        FROM categories\n        WHERE id = $1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "readonly",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 3,
+        "name": "total_post_count!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      null
+    ]
+  },
+  "hash": "2d87cb5c549dd77cbf30b7237902cdb283351e1b4f00ce552f4a148812d0636e"
+}
