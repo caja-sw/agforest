@@ -4,7 +4,9 @@
   "service": "app",
   "workspaceFolder": "/workspaces/agforest",
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {}
+    "ghcr.io/devcontainers/features/node:1": {
+      "installYarnUsingApt": false
+    }
   },
   "customizations": {
     "vscode": {
