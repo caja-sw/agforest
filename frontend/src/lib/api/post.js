@@ -38,7 +38,9 @@ export async function getPost({ id }, fetch = window.fetch) {
 
   if (!res.ok) return Promise.reject(res);
 
-  return await res.json();
+  const data = await res.json();
+  data.likeCount = 100;
+  return data;
 }
 
 /**
@@ -53,6 +55,21 @@ export async function deletePost({ id, password }, fetch = window.fetch) {
   const res = await fetch(resolveAPI(`posts/${id}`), {
     method: "DELETE",
     headers: { Password: password },
+  });
+
+  if (!res.ok) return Promise.reject(res);
+}
+
+/**
+ * 게시글 좋아요
+ *
+ * @param {Object} param0
+ * @param {number} param0.id
+ * @returns {Promise<void>}
+ */
+export async function likePost({ id }, fetch = window.fetch) {
+  const res = await fetch(resolveAPI(`posts/${id}/like`), {
+    method: "POST",
   });
 
   if (!res.ok) return Promise.reject(res);

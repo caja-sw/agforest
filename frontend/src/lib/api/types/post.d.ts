@@ -5,6 +5,7 @@ interface PostListItem {
     hash: string;
   };
   title: string;
+  likeCount: number;
   createdAt: string;
   commentCount: number;
 }
@@ -22,6 +23,7 @@ interface Post {
   };
   title: string;
   content: string;
+  likeCount: number;
   createdAt: string;
   comments: CommentListItem[];
 }

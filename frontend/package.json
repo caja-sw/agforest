@@ -14,12 +14,12 @@
   },
   "devDependencies": {
     "@eslint/compat": "^2",
-    "@eslint/js": "^9",
+    "@eslint/js": "^10",
     "@sveltejs/adapter-node": "^5",
     "@sveltejs/kit": "^2",
-    "@sveltejs/vite-plugin-svelte": "^6",
+    "@sveltejs/vite-plugin-svelte": "^7",
     "@tailwindcss/vite": "^4",
-    "eslint": "^9",
+    "eslint": "^10",
     "eslint-config-prettier": "^10",
     "eslint-plugin-svelte": "^3",
     "globals": "^17",
@@ -30,7 +30,7 @@
     "svelte": "^5",
     "svelte-check": "^4",
     "tailwindcss": "^4",
-    "typescript": "^5",
-    "vite": "^7"
+    "typescript": "^6",
+    "vite": "^8"
   }
 }
