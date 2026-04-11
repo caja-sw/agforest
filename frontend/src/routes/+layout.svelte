@@ -56,7 +56,8 @@
 </svelte:head>
 
 <div
-  class="min-h-screen before:fixed before:inset-0 before:-z-10 before:bg-(image:--bg-image) before:bg-cover before:bg-center before:bg-no-repeat before:opacity-60 before:duration-1000 before:ease-in-out before:content-['']"
+  class="min-h-screen before:fixed before:inset-0 before:-z-10 before:bg-(image:--bg-image) before:bg-cover before:bg-center before:bg-no-repeat before:opacity-60 before:duration-1000 before:ease-in-out before:content-[''] 
+  after:fixed after:inset-0 after:-z-10 after:bg-black after:opacity-80 after:content-['']"
   style:--bg-image={bgImage}
 >
   <div class="mx-auto grid max-w-7xl md:gap-8 md:p-16">

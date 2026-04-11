@@ -37,7 +37,7 @@
       {#each categories as category (category.id)}
         <li>
           <a
-            class="block p-2 leading-none"
+            class="block p-2 leading-none font-medium hover:font-semibold"
             href={resolve("/[id=id]", { id: String(category.id) })}
             >{category.name}</a
           >
@@ -49,7 +49,7 @@
       {#if !category.readonly}
         <!-- eslint-disable svelte/no-navigation-without-resolve -->
         <a
-          class="block p-2 leading-none"
+          class="block p-2 leading-none font-medium hover:font-semibold"
           href={`${resolve("/write")}?${new URLSearchParams({ c: String(category.id) })}`}
           >게시글 쓰기</a
         >
