@@ -39,3 +39,18 @@ export async function deleteComment({ id, password }, fetch = window.fetch) {
 
   if (!res.ok) return Promise.reject(res);
 }
+
+/**
+ * 댓글 좋아요
+ *
+ * @param {Object} param0
+ * @param {number} param0.id
+ * @returns {Promise<void>}
+ */
+export async function likeComment({ id }, fetch = window.fetch) {
+  const res = await fetch(resolveAPI(`comments/${id}/like`), {
+    method: "POST",
+  });
+
+  if (!res.ok) return Promise.reject(res);
+}
