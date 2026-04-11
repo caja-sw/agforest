@@ -9,8 +9,8 @@ interface MaxLengthConstraint {
 interface LinebreakConstraint {
   type: "LINEBREAK_CONSTRAINT";
 }
-interface CharacterConstraint {
-  type: "CHARACTER_CONSTRAINT";
+interface PasswordConstraint {
+  type: "PASSWORD_CONSTRAINT";
 }
 
 type AuthorConstraint =
@@ -19,7 +19,7 @@ type AuthorConstraint =
   | LinebreakConstraint;
 
 type PasswordConstraint =
-  | CharacterConstraint
+  | PasswordConstraint
   | MinLengthConstraint
   | MaxLengthConstraint;
 

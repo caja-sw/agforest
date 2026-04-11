@@ -38,9 +38,7 @@ export async function getPost({ id }, fetch = window.fetch) {
 
   if (!res.ok) return Promise.reject(res);
 
-  const data = await res.json();
-  data.likeCount = 100;
-  return data;
+  return await res.json();
 }
 
 /**

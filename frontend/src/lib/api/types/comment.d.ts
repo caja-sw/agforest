@@ -5,5 +5,6 @@ interface CommentListItem {
     hash: string;
   };
   content: string;
+  likeCount: number;
   createdAt: string;
 }

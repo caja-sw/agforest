@@ -34,9 +34,5 @@ export async function getCategory(
 
   if (!res.ok) return Promise.reject(res);
 
-  const data = await res.json();
-  for (const post of data.posts) {
-    post.likeCount = 100;
-  }
-  return data;
+  return await res.json();
 }
