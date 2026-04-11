@@ -5,6 +5,8 @@ mod delete_post;
 mod get_categories;
 mod get_category;
 mod get_post;
+mod like_comment;
+mod like_post;
 
 pub use create_comment::*;
 pub use create_post::*;
@@ -13,3 +15,5 @@ pub use delete_post::*;
 pub use get_categories::*;
 pub use get_category::*;
 pub use get_post::*;
+pub use like_comment::*;
+pub use like_post::*;

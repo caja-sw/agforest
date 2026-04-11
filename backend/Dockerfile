@@ -1,6 +1,6 @@
 FROM rust:trixie AS builder
+COPY . /app
 WORKDIR /app
-COPY . ./
 ENV SQLX_OFFLINE=true
 RUN cargo build --release
 

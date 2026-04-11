@@ -1,58 +1,53 @@
 use std::collections::HashMap;
 
 use actix_web::{
-    HttpRequest, HttpResponse, Responder,
-    error::{ErrorInternalServerError, ErrorNotFound},
+    HttpResponse, Responder,
+    error::{ErrorForbidden, ErrorInternalServerError},
     post, web,
 };
-use serde_json::{Value, json};
+use argon2::{
+    Argon2, PasswordHasher,
+    password_hash::{SaltString, rand_core::OsRng},
+};
+use serde::Deserialize;
+use serde_json::json;
 use sqlx::{Pool, Postgres};
 
-use crate::{
-    dto::create_comment::Request,
-    helper::{get_request_hash, hash_password},
-};
+use crate::{extractors, validators::*};
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct Request {
+    author: String,
+    password: String,
+    content: String,
+}
 
 #[post("/posts/{id}/comments")]
 pub async fn create_comment(
-    req: HttpRequest,
     path: web::Path<i32>,
+    req_hash: extractors::RequestHash,
     data: web::Json<Request>,
     pool: web::Data<Pool<Postgres>>,
 ) -> actix_web::Result<impl Responder> {
-    let author_hash = get_request_hash(&req)?;
     let post_id = path.into_inner();
-    let Request {
-        author: author_name,
-        password,
-        content,
-    } = data.into_inner();
 
-    let mut constraints = HashMap::<&str, Value>::new();
-    let author_name = author_name
-        .unwrap()
-        .map_err(|e| constraints.insert("author", e))
-        .ok();
-    let password = password
-        .unwrap()
-        .map_err(|e| constraints.insert("password", e))
-        .ok();
-    let content = content
-        .unwrap()
-        .map_err(|e| constraints.insert("content", e))
-        .ok();
-
+    let mut constraints = HashMap::new();
+    validate_author("author", &data.author, &mut constraints);
+    validate_password("password", &data.password, &mut constraints);
+    validate_comment_content("content", &data.content, &mut constraints);
     if !constraints.is_empty() {
         return Ok(HttpResponse::UnprocessableEntity().json(json!({
-            "constraints": constraints
+            "constraints": constraints,
         })));
     }
 
-    let author_name = author_name.unwrap();
-    let password = password.unwrap();
-    let content = content.unwrap();
-
-    let password_hash = hash_password(&password).map_err(ErrorInternalServerError)?;
+    let salt = SaltString::generate(&mut OsRng);
+    let argon2 = Argon2::default();
+    let password_hash = argon2
+        .hash_password(data.password.as_bytes(), &salt)
+        .map(|hash| hash.to_string())
+        .map_err(ErrorInternalServerError)?;
 
     sqlx::query!(
         r#"
@@ -63,26 +58,21 @@ pub async fn create_comment(
             password_hash,
             content
         )
-        VALUES ($1, $2, $3, $4, $5)
+        SELECT $1, $2, $3, $4, $5
+        FROM posts
+        WHERE id = $1
+        RETURNING id
         "#,
         post_id,
-        author_name,
-        author_hash,
+        &*data.author,
+        &*req_hash,
         password_hash,
-        content
+        &*data.content
     )
-    .execute(pool.get_ref())
+    .fetch_optional(&**pool)
     .await
-    .map_err(|err| {
-        if err
-            .as_database_error()
-            .is_some_and(|err| err.constraint() == Some("comments_post_id_fkey"))
-        {
-            ErrorNotFound("Post not found")
-        } else {
-            ErrorInternalServerError(err)
-        }
-    })?;
+    .map_err(ErrorInternalServerError)?
+    .ok_or(ErrorForbidden("Post not found"))?;
 
-    Ok(HttpResponse::Created().finish())
+    Ok(HttpResponse::Ok().finish())
 }

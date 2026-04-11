@@ -1,34 +1,23 @@
-volumes:
-  target:
-  node_modules:
-  postgres-data:
-
-
 services:
   app:
     build:
       dockerfile: Dockerfile
     volumes:
       - ..:/workspaces/agforest:cached
-      - target:/workspaces/agforest/backend/target:cached
-      - node_modules:/workspaces/agforest/frontend/node_modules:cached
     command: sleep infinity
     environment:
       AGFOREST_SERVER_HOST: 0.0.0.0
       AGFOREST_SERVER_PORT: 3000
       AGFOREST_WORKER_THREADS: 8
       AGFOREST_MAX_BLOCKING_THREADS: 16
-      AGFOREST_SHUTDOWN_TIMEOUT_SECS: 30
-      AGFOREST_DATABASE_URL: postgres://agforest:agforest@database:5432/agforest
+      AGFOREST_DATABASE_URL: postgres://vscode:root@database:5432/agforest
       AGFOREST_DATABASE_CONNECTION_LIMIT: 10
 
-      DATABASE_URL: postgres://agforest:agforest@database:5432/agforest
+      DATABASE_URL: postgres://vscode:root@database:5432/agforest
 
   database:
     image: postgres:17-trixie
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: agforest
-      POSTGRES_PASSWORD: agforest
+      POSTGRES_USER: vscode
+      POSTGRES_PASSWORD: root
       POSTGRES_DB: agforest

@@ -1,18 +1,17 @@
 use actix_web::{App, HttpServer, web};
-use anyhow::{Context, Ok, Result};
+use anyhow::Context;
 use sqlx::postgres::PgPoolOptions;
-use tokio::runtime::Builder as TokioRuntimeBuilder;
 use tracing_actix_web::TracingLogger;
 
 use crate::{Config, services};
 
-pub fn start_server(config: &Config) -> Result<()> {
-    let runtime = TokioRuntimeBuilder::new_multi_thread()
+pub fn start_server(config: &Config) -> anyhow::Result<()> {
+    let runtime = tokio::runtime::Builder::new_multi_thread()
         .worker_threads(config.worker_threads)
         .max_blocking_threads(config.max_blocking_threads)
         .enable_all()
         .build()
-        .context("Failed to create Tokio runtime")?;
+        .context("Failed to create tokio runtime")?;
 
     runtime.block_on(async {
         let pool = PgPoolOptions::new()
@@ -20,6 +19,11 @@ pub fn start_server(config: &Config) -> Result<()> {
             .connect(&config.database_url)
             .await
             .context("Failed to create database connection pool")?;
+
+        sqlx::migrate!("./migrations")
+            .run(&pool)
+            .await
+            .context("Failed to run database migrations")?;
 
         HttpServer::new(move || {
             App::new()
@@ -32,6 +36,8 @@ pub fn start_server(config: &Config) -> Result<()> {
                 .service(services::create_comment)
                 .service(services::delete_post)
                 .service(services::delete_comment)
+                .service(services::like_post)
+                .service(services::like_comment)
         })
         .bind((config.server_host.as_str(), config.server_port))
         .context("Failed to bind server")?
@@ -39,7 +45,7 @@ pub fn start_server(config: &Config) -> Result<()> {
         .await
         .context("Failed to run server")?;
 
-        Ok(())
+        anyhow::Ok(())
     })?;
 
     Ok(())

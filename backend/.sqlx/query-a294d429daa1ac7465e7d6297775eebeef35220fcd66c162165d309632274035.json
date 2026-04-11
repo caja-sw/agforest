@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT p.password_hash\n        FROM posts p\n        JOIN categories c ON p.category_id = c.id\n        WHERE p.id = $1 AND p.deleted_at IS NULL AND c.readonly = false \n        FOR UPDATE OF p;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "password_hash",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "a294d429daa1ac7465e7d6297775eebeef35220fcd66c162165d309632274035"
+}

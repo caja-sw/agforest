@@ -6,7 +6,7 @@ publish = false
 [dependencies]
 actix-web          = { version = "4" }
 anyhow             = { version = "1" }
-argon2             = { version = "0.5", features = ["std"] }
+argon2             = { version = "0.5" }
 blake3             = { version = "1" }
 chrono             = { version = "0.4", features = ["serde"] }
 config             = { version = "0.15" }

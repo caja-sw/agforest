@@ -1,0 +1,6 @@
+pub const MIN_LENGTH_CONSTRAINT: &str = "MIN_LENGTH_CONSTRAINT";
+pub const MAX_LENGTH_CONSTRAINT: &str = "MAX_LENGTH_CONSTRAINT";
+pub const LINEBREAK_CONSTRAINT: &str = "LINEBREAK_CONSTRAINT";
+pub const PASSWORD_CONSTRAINT: &str = "PASSWORD_CONSTRAINT";
+pub const PARAM_MIN: &str = "min";
+pub const PARAM_MAX: &str = "max";
