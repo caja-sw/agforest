@@ -22,7 +22,7 @@ pub fn validate_password<'k>(
         if length > MAX {
             codes.insert(MAX_LENGTH_CONSTRAINT, json!({ PARAM_MAX: MAX }));
         }
-        if value.chars().all(|c| c >= 33 as char && c <= 126 as char) {
+        if !value.chars().all(|c| c >= 33 as char && c <= 126 as char) {
             codes.insert(PASSWORD_CONSTRAINT, json!({}));
         }
     }
