@@ -1,36 +1,30 @@
-interface MinLengthConstraint {
-  type: "MIN_LENGTH_CONSTRAINT";
-  value: number;
+interface AuthorConstraint {
+  MIN_LENGTH_CONSTRAINT?: { min: number };
+  MAX_LENGTH_CONSTRAINT?: { max: number };
+  LINEBREAK_CONSTRAINT?: {};
 }
-interface MaxLengthConstraint {
-  type: "MAX_LENGTH_CONSTRAINT";
-  value: number;
-}
-interface LinebreakConstraint {
-  type: "LINEBREAK_CONSTRAINT";
-}
+
 interface PasswordConstraint {
-  type: "PASSWORD_CONSTRAINT";
+  MIN_LENGTH_CONSTRAINT?: { min: number };
+  MAX_LENGTH_CONSTRAINT?: { max: number };
+  PASSWORD_CONSTRAINT?: {};
 }
 
-type AuthorConstraint =
-  | MinLengthConstraint
-  | MaxLengthConstraint
-  | LinebreakConstraint;
+interface PostTitleConstraint {
+  MIN_LENGTH_CONSTRAINT?: { min: number };
+  MAX_LENGTH_CONSTRAINT?: { max: number };
+  LINEBREAK_CONSTRAINT?: {};
+}
 
-type PasswordConstraint =
-  | PasswordConstraint
-  | MinLengthConstraint
-  | MaxLengthConstraint;
+interface PostContentConstraint {
+  MIN_LENGTH_CONSTRAINT?: { min: number };
+  MAX_LENGTH_CONSTRAINT?: { max: number };
+}
 
-type PostTitleConstraint =
-  | MinLengthConstraint
-  | MaxLengthConstraint
-  | LinebreakConstraint;
-
-type PostContentConstraint = MinLengthConstraint | MaxLengthConstraint;
-
-type CommentContentConstraint = MinLengthConstraint | MaxLengthConstraint;
+interface CommentContentConstraint {
+  MIN_LENGTH_CONSTRAINT?: { min: number };
+  MAX_LENGTH_CONSTRAINT?: { max: number };
+}
 
 interface CreatePostConstraints {
   constraints: {
@@ -45,6 +39,6 @@ interface CreateCommentConstraints {
   constraints: {
     author?: AuthorConstraint;
     password?: PasswordConstraint;
-    content?: PostContentConstraint;
+    content?: CommentContentConstraint;
   };
 }
