@@ -2,11 +2,49 @@
   import { invalidateAll } from "$app/navigation";
   import { deleteComment } from "$lib/api";
   import { DeleteButton } from "$lib/components";
+  import { likeComment } from "$lib/api";
 
   /** @type {{ comments: CommentListItem[] }} */
   const { comments } = $props();
 
   let deleting = $state(false);
+  let likingId = $state(null);
+  let likedMap = $state({});
+
+  function likedKey(id) {
+    return `liked_comment_${id}`;
+  }
+
+  $effect(() => {
+    const map = {};
+    for (const comment of comments) {
+      map[comment.id] =
+        localStorage.getItem(likedKey(comment.id)) === "true";
+    }
+    likedMap = map;
+  });
+
+  async function handleLike(commentId) {
+    if (likedMap[commentId] || likingId === commentId) {
+      alert("이미 좋아요를 눌렀습니다.");
+      return;
+    }
+
+    likingId = commentId;
+
+    try {
+      await likeComment({ id: commentId });
+
+      localStorage.setItem(likedKey(commentId), "true");
+      likedMap = { ...likedMap, [commentId]: true };
+
+      await invalidateAll();
+    } catch {
+      alert("댓글 좋아요 처리에 실패했습니다.");
+    } finally {
+      likingId = null;
+    }
+  }
 
   /** @param {number} id  */
   async function handleDelete(id) {
@@ -55,6 +93,14 @@
             <p class="whitespace-pre-wrap">{comment.content}</p>
 
             <div class="place-self-end">
+              <button
+                class="like-btn"
+                class:liked={likedMap[comment.id]}
+                onclick={() => handleLike(comment.id)}
+                disabled={likedMap[comment.id] || likingId === comment.id}
+              >
+                ♡ {comment.likeCount ?? ""}
+              </button>
               <DeleteButton
                 onclick={() => handleDelete(comment.id)}
                 disabled={deleting}
@@ -68,3 +114,36 @@
     <p>댓글이 없습니다</p>
   {/if}
 </section>
+
+<style>
+  .like-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #ff6b6b;
+    background-color: white;
+    color: #ff6b6b;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .like-btn:hover {
+    background-color: #ff6b6b;
+    color: white;
+    transform: scale(1.05);
+  }
+
+  .like-btn.liked {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+  }
+
+  .like-btn:disabled {
+    cursor: not-allowed;
+  }
+
+  .like-btn:active {
+    transform: scale(0.95);
+  }
+</style>

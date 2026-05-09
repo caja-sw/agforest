@@ -93,10 +93,13 @@
                   </div>
                   <div class="w-8 place-self-center text-center">
                     <span
-                      >{post.commentCount < 100
+                      >💬{post.commentCount < 100
                         ? post.commentCount
                         : "99+"}</span
                     >
+                    <span>
+                      ❤️{post.likeCount}
+                    </span>
                   </div>
                 </section>
               </a>
