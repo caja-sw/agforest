@@ -43,6 +43,7 @@ pub async fn get_post(
             author_name,
             author_hash,
             content,
+            like_count,
             created_at
         FROM comments
         WHERE post_id = $1 AND deleted_at IS NULL
@@ -79,6 +80,7 @@ pub async fn get_post(
                     "hash": comment.author_hash
                 },
                 "content": comment.content,
+                "likeCount": comment.like_count,
                 "createdAt": comment.created_at,
             })
         }).collect::<Vec<_>>()
