@@ -10,16 +10,4 @@ import bg09 from "./09.webp";
 import bg10 from "./10.webp";
 import bg11 from "./11.webp";
 
-export const backgroundImages = [
-  bg01,
-  bg02,
-  bg03,
-  bg04,
-  bg05,
-  bg06,
-  bg07,
-  bg08,
-  bg09,
-  bg10,
-  bg11,
-];
+export const backgroundImages = [bg01, bg02, bg03, bg04, bg05, bg06, bg07, bg08, bg09, bg10, bg11];

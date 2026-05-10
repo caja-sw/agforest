@@ -7,7 +7,7 @@
   <textarea
     class={[
       "card focus:outline-primary min-h-[calc(1lh*var(--min-lines)+20px)] w-full resize-none p-3",
-      error.length > 0 && "outline-accent",
+      error.length > 0 && "outline-warn",
     ]}
     name="content"
     bind:value
@@ -19,5 +19,5 @@
       currentTarget.style.height = `${currentTarget.scrollHeight}px`;
     }}
   ></textarea>
-  <span class="text-accent">{error}</span>
+  <span class="text-warn">{error}</span>
 </div>

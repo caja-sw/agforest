@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT\n            c.id,\n            c.name,\n            c.readonly,\n            (\n                SELECT COUNT(id)\n                FROM posts\n                WHERE category_id = c.id AND deleted_at IS NULL\n            ) AS \"total_post_count!\"\n        FROM categories c\n        WHERE c.id = $1\n        ",
+  "query": "\n        SELECT\n            c.id,\n            c.name,\n            c.readonly,\n            (\n                SELECT COUNT(id)\n                FROM posts\n                WHERE category_id = c.id AND deleted_at IS NULL\n            ) AS \"post_count!\"\n        FROM categories c\n        WHERE c.id = $1\n        ",
   "describe": {
     "columns": [
       {
@@ -20,7 +20,7 @@
       },
       {
         "ordinal": 3,
-        "name": "total_post_count!",
+        "name": "post_count!",
         "type_info": "Int8"
       }
     ],
@@ -36,5 +36,5 @@
       null
     ]
   },
-  "hash": "5169b2cf92f64bf93de6ac687e45b76b17658bd68f8451584fe10bbc37d31ac1"
+  "hash": "2f7bb4f13a94bf5437b9a7710556c85db82b46f6e873302daf87778ebc82e641"
 }

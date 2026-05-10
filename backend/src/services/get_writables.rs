@@ -2,15 +2,15 @@ use actix_web::{HttpResponse, Responder, error::ErrorInternalServerError, get, w
 use serde_json::json;
 use sqlx::{Pool, Postgres};
 
-#[get("/categories")]
-pub async fn get_categories(pool: web::Data<Pool<Postgres>>) -> actix_web::Result<impl Responder> {
+#[get("/writables")]
+pub async fn get_writables(pool: web::Data<Pool<Postgres>>) -> actix_web::Result<impl Responder> {
     let categories = sqlx::query!(
         r#"
         SELECT
             id,
-            name,
-            readonly
+            name
         FROM categories
+        WHERE readonly = false
         "#
     )
     .fetch_all(&**pool)
@@ -22,7 +22,6 @@ pub async fn get_categories(pool: web::Data<Pool<Postgres>>) -> actix_web::Resul
             json!({
                 "id": category.id,
                 "name": category.name,
-                "readonly": category.readonly,
             })
         }).collect::<Vec<_>>(),
     })))

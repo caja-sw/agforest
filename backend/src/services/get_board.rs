@@ -15,18 +15,27 @@ struct Query {
     pub offset: i64,
 }
 
-#[get("/categories/{id}")]
-pub async fn get_category(
+#[get("/board/{id}")]
+pub async fn get_board(
     path: web::Path<i32>,
     query: web::Query<Query>,
     pool: web::Data<Pool<Postgres>>,
 ) -> actix_web::Result<impl Responder> {
     let category_id = path.into_inner();
-    let Query { limit, offset } = *query;
 
-    if !(1..=100).contains(&limit) || offset < 0 {
+    if !(1..=100).contains(&query.limit) || query.offset < 0 {
         return Ok(HttpResponse::BadRequest().finish());
     }
+
+    let categories = sqlx::query!(
+        r#"
+        SELECT
+            id,
+            name
+        FROM categories
+        "#
+    )
+    .fetch_all(&**pool);
 
     let category = sqlx::query!(
         r#"
@@ -38,7 +47,7 @@ pub async fn get_category(
                 SELECT COUNT(id)
                 FROM posts
                 WHERE category_id = c.id AND deleted_at IS NULL
-            ) AS "total_post_count!"
+            ) AS "post_count!"
         FROM categories c
         WHERE c.id = $1
         "#,
@@ -72,14 +81,23 @@ pub async fn get_category(
     )
     .fetch_all(&**pool);
 
-    let (category, posts) = try_join!(category, posts).map_err(ErrorInternalServerError)?;
+    let (categories, category, posts) =
+        try_join!(categories, category, posts).map_err(ErrorInternalServerError)?;
     let category = category.ok_or(ErrorNotFound("Category not found"))?;
 
     Ok(HttpResponse::Ok().json(json!({
-        "id": category.id,
-        "name": category.name,
-        "readonly": category.readonly,
-        "totalPostCount": category.total_post_count,
+        "categories": categories.into_iter().map(|category| {
+            json!({
+                "id": category.id,
+                "name": category.name,
+            })
+        }).collect::<Vec<_>>(),
+        "category": {
+            "id": category.id,
+            "name": category.name,
+            "readonly": category.readonly,
+            "postCount": category.post_count,
+        },
         "posts": posts.into_iter().map(|post| {
             json!({
                 "id": post.id,

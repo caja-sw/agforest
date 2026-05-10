@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT\n            id,\n            name,\n            readonly\n        FROM categories\n        ",
+  "query": "\n        SELECT\n            id,\n            name\n        FROM categories\n        WHERE readonly = false\n        ",
   "describe": {
     "columns": [
       {
@@ -12,11 +12,6 @@
         "ordinal": 1,
         "name": "name",
         "type_info": "Text"
-      },
-      {
-        "ordinal": 2,
-        "name": "readonly",
-        "type_info": "Bool"
       }
     ],
     "parameters": {
@@ -24,9 +19,8 @@
     },
     "nullable": [
       false,
-      false,
       false
     ]
   },
-  "hash": "1dfc04ddce3d4e764725faf4ddf19247b52cec5c9f081ad4cc619cd8a50a18c0"
+  "hash": "ec5d347548d65d64ee99c829f2330960aee8f6f0b1cc014200926d73643b3103"
 }

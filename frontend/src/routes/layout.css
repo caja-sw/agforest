@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Pretendard", "Noto Sans KR", sans-serif;
+  --font-sans: "Pretendard Variable", sans-serif;
 
   --color-primary: #5f8f4e;
-  --color-accent: #9a6b3f;
+  --color-warn: #9a6b3f;
+  --color-like: #ff6b6b;
 
-  --color-bg: #eef3dc;
+  --color-base-100: #ffffff;
+  --color-base-200: #eef3dc;
   --color-border: #9fb383;
 
   --color-text: #1d2a1b;
@@ -15,7 +17,7 @@
 
 @layer base {
   body {
-    @apply bg-bg text-text font-sans;
+    @apply text-text font-sans;
   }
 
   * {
@@ -25,36 +27,16 @@
 
 @utility card {
   @apply rounded-2xl border border-[#b8c79a]/45 shadow-md backdrop-blur-sm;
-  background: linear-gradient(
-    135deg,
-    rgba(238, 243, 220, 0.78),
-    rgba(217, 230, 190, 0.68)
-  );
+  background: linear-gradient(135deg, rgba(238, 243, 220, 0.78), rgba(217, 230, 190, 0.68));
 }
 
 @utility glass {
   @apply rounded-2xl border border-white/35 shadow-lg backdrop-blur-md backdrop-saturate-125;
-  background: linear-gradient(
-    135deg,
-    rgba(232, 240, 211, 0.68),
-    rgba(196, 218, 166, 0.52)
-  );
+  background: linear-gradient(135deg, rgba(232, 240, 211, 0.68), rgba(196, 218, 166, 0.52));
 }
 
-.site-title {
-  background: linear-gradient(
-    120deg,
-    #fff7d6 0%,
-    #d7ec9f 30%,
-    #6fa45a 65%,
-    #b48655 100%
-  );
-
-  background-clip: text;
-  -webkit-background-clip: text;
-
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-
+@utility site-title {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(120deg, #fff7d6 0%, #d7ec9f 30%, #6fa45a 65%, #b48655 100%);
   filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.6));
 }

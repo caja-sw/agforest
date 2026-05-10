@@ -1,7 +1,8 @@
-import { getPost } from "$lib/api";
+import { getPost } from "$lib/server/api";
 import { error } from "@sveltejs/kit";
 
-export async function load({ fetch, params }) {
+/** @type {import("./$types").PageServerLoad} */
+export const load = async ({ fetch, params }) => {
   try {
     const id = Number(params.id);
     const post = await getPost({ id }, fetch);
@@ -15,8 +16,10 @@ export async function load({ fetch, params }) {
       },
       post,
     };
-  } catch (errRes) {
-    if (!(errRes instanceof Response)) throw errRes;
-    error(errRes.status);
+  } catch (err) {
+    if (!(err instanceof Response)) {
+      throw err;
+    }
+    error(err.status);
   }
-}
+};

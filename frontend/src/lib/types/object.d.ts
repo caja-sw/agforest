@@ -1,3 +1,15 @@
+interface CategoryListItem {
+  id: number;
+  name: string;
+}
+
+interface Category {
+  id: number;
+  name: string;
+  readonly: boolean;
+  postCount: number;
+}
+
 interface PostListItem {
   id: number;
   author: {
@@ -25,5 +37,16 @@ interface Post {
   content: string;
   likeCount: number;
   createdAt: string;
-  comments: CommentListItem[];
+  comments: Comment[];
+}
+
+interface Comment {
+  id: number;
+  author: {
+    name: string;
+    hash: string;
+  };
+  content: string;
+  likeCount: number;
+  createdAt: string;
 }

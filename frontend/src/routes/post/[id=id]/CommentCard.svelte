@@ -1,17 +1,16 @@
 <script>
-  import { goto, invalidateAll } from "$app/navigation";
-  import { resolve } from "$app/paths";
-  import { deletePost, likePost, unlikePost } from "$lib/api";
+  import { invalidateAll } from "$app/navigation";
+  import { deleteComment, likeComment, unlikeComment } from "$lib/api";
   import { DeleteButton, LikeButton } from "$lib/components";
   import { onMount } from "svelte";
 
-  /** @type {{ post: Post }} */
-  const { post } = $props();
+  /** @type {{ comment: Comment }} */
+  const { comment } = $props();
 
   let deleting = $state(false);
   let liking = $state(false);
   let liked = $state(false);
-  const likedKey = $derived(`liked_post_${post.id}`);
+  const likedKey = $derived(`liked_comment_${comment.id}`);
 
   onMount(() => {
     liked = localStorage.getItem(likedKey) !== null;
@@ -33,10 +32,10 @@
 
     try {
       if (liked) {
-        await unlikePost({ id: post.id });
+        await unlikeComment({ id: comment.id });
         liked = false;
       } else {
-        await likePost({ id: post.id });
+        await likeComment({ id: comment.id });
         liked = true;
       }
     } catch {
@@ -59,8 +58,7 @@
         return;
       }
 
-      await deletePost({ id: post.id, password });
-      goto(resolve("/[id=id]", { id: String(post.category.id) }));
+      await deleteComment({ id: comment.id, password });
     } catch (errRes) {
       if (!(errRes instanceof Response)) {
         throw errRes;
@@ -69,37 +67,27 @@
       if (errRes.status === 403) {
         alert("비밀번호가 일치하지 않습니다");
       } else if (errRes.status === 404) {
-        alert("게시글이 존재하지 않습니다");
+        alert("댓글이 존재하지 않습니다");
       } else {
         alert("알 수 없는 오류가 발생했습니다");
       }
     } finally {
       deleting = false;
+      await invalidateAll();
     }
   }
 </script>
 
-<article class="glass p-6">
-  <header class="grid gap-2">
-    <div>
-      <span class="text-text-muted text-sm">{post.category.name}</span>
-      <h1 class="text-3xl leading-none">{post.title}</h1>
-    </div>
-    <div class="text-text-muted flex flex-wrap justify-between gap-x-4">
-      <span>{post.author.name}#{post.author.hash.slice(0, 6)}</span>
-      <time>{new Date(post.createdAt).toLocaleString()}</time>
-    </div>
+<article class="card grid p-4">
+  <header class="text-text-muted flex flex-wrap justify-between gap-x-4">
+    <span>{comment.author.name}#{comment.author.hash.slice(0, 6)}</span>
+    <time>{new Date(comment.createdAt).toLocaleString()}</time>
   </header>
 
-  <hr class="my-2" />
+  <p class="whitespace-pre-wrap">{comment.content}</p>
 
-  <p class="whitespace-pre-wrap">{post.content}</p>
-
-  <div class="mt-4 flex justify-end gap-2">
-    <LikeButton {liked} count={post.likeCount} onclick={handleLike} disabled={liking} />
-
-    {#if !post.category.readonly}
-      <DeleteButton onclick={handleDelete} disabled={deleting} />
-    {/if}
+  <div class="flex gap-2 place-self-end">
+    <LikeButton {liked} count={comment.likeCount} onclick={handleLike} disabled={liking} />
+    <DeleteButton onclick={handleDelete} disabled={deleting} />
   </div>
 </article>

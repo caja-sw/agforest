@@ -3,7 +3,6 @@
   const props = $props();
 </script>
 
-<button
-  class="bg-accent disabled:bg-accent/50 text-bg rounded-xl px-6 py-3 font-bold hover:cursor-pointer"
-  {...props}>삭제</button
->
+<button class="bg-warn disabled:bg-warn/50 rounded-xl px-6 py-3 hover:cursor-pointer" {...props}>
+  <span class="text-bg font-bold">삭제</span>
+</button>
