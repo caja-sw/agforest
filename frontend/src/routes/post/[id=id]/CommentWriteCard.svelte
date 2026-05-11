@@ -2,7 +2,7 @@
   import { invalidateAll } from "$app/navigation";
   import { createComment } from "$lib/api";
   import { ContentField, InputField, SubmitButton } from "$lib/components";
-  import { getErrorMessagesFromCreateCommentConstraints } from "$lib/helper/get-error-messages";
+  import { getErrorMessagesFromCreateCommentConstraints } from "$lib/helper";
 
   /** @type {{ postId: number }} */
   const { postId } = $props();
@@ -20,32 +20,33 @@
   async function submit(event) {
     event.preventDefault();
 
+    if (uploading) {
+      return;
+    }
     uploading = true;
+
     try {
       await createComment({ postId, author, password, content });
       content = "";
-      invalidateAll();
     } catch (errRes) {
-      if (!(errRes instanceof Response)) throw errRes;
+      if (!(errRes instanceof Response)) {
+        throw errRes;
+      }
 
-      switch (errRes.status) {
-        case 404:
-          alert("카테고리가 존재하지 않습니다");
-          break;
-        case 422: {
-          /** @type {CreateCommentConstraints} */
-          const error = await errRes.json();
-          const message = getErrorMessagesFromCreateCommentConstraints(error);
-          authorError = message.author ?? "";
-          passwordError = message.password ?? "";
-          contentError = message.content ?? "";
-          break;
-        }
-        default:
-          alert("알 수 없는 오류가 발생했습니다");
+      if (errRes.status === 404) {
+        alert("게시글이 존재하지 않습니다");
+      } else if (errRes.status === 422) {
+        const error = await errRes.json();
+        const message = getErrorMessagesFromCreateCommentConstraints(error);
+        authorError = message.author ?? "";
+        passwordError = message.password ?? "";
+        contentError = message.content ?? "";
+      } else {
+        alert("알 수 없는 오류가 발생했습니다");
       }
     } finally {
       uploading = false;
+      await invalidateAll();
     }
   }
 </script>
@@ -54,12 +55,7 @@
   <h1 class="text-xl">댓글 작성</h1>
   <form class="grid gap-4" onsubmit={submit} novalidate>
     <div class="grid grid-cols-2 gap-x-4 gap-y-1">
-      <InputField
-        label="닉네임"
-        type="text"
-        bind:value={author}
-        bind:error={authorError}
-      />
+      <InputField label="닉네임" type="text" bind:value={author} bind:error={authorError} />
       <InputField
         label="비밀번호"
         type="password"

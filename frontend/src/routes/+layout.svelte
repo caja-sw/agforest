@@ -1,22 +1,17 @@
 <script>
+  import "pretendard/dist/web/variable/pretendardvariable.css";
   import "./layout.css";
 
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
   import { backgroundImages } from "$lib/backgrounds";
-  import { SITE_NAME } from "$lib/constants";
+  import { DESCRIPTION, SITE_NAME } from "$lib/constants";
   import { onMount } from "svelte";
 
   const { children } = $props();
   const error = $derived(page.error);
-  const {
-    title,
-    description = "앙고나무숲 — 천안중앙고등학교 익명 커뮤니티. SW융합부 개발",
-    article,
-  } = $derived(page.data);
-  const canonicalHref = $derived(
-    new URL(page.url.pathname, page.url.origin).href,
-  );
+  const { title, description = DESCRIPTION, article } = $derived(page.data);
+  const canonicalHref = $derived(new URL(page.url.pathname, page.url.origin).href);
 
   let bgImageUrl = $state(backgroundImages[0]);
   const bgImage = $derived(`url(${bgImageUrl})`);
@@ -55,17 +50,20 @@
   {/each}
 </svelte:head>
 
-<div
-  class="min-h-screen before:fixed before:inset-0 before:-z-10 before:bg-(image:--bg-image) before:bg-cover before:bg-center before:bg-no-repeat before:opacity-60 before:duration-1000 before:ease-in-out before:content-['']"
-  style:--bg-image={bgImage}
->
+<div class="min-h-screen">
+  <div
+    class="fixed inset-0 bg-(image:--bg-image) bg-cover bg-center bg-no-repeat opacity-60 duration-1000 ease-in-out"
+    style:--bg-image={bgImage}
+  ></div>
+  <div class="fixed inset-0 bg-black/75"></div>
   <div class="mx-auto grid max-w-7xl md:gap-8 md:p-16">
     <header class="flex items-center justify-between p-4 md:p-0">
       <h1>
-        <a
-          class="text-bg text-4xl font-semibold text-shadow-lg/20 md:text-6xl"
-          href={resolve("/")}>{SITE_NAME}</a
-        >
+        <a href={resolve("/")}>
+          <span class="site-title text-4xl font-bold md:text-6xl">
+            {SITE_NAME}
+          </span>
+        </a>
       </h1>
       <a href="https://github.com/caja-sw/agforest" target="_blank">
         <div class="glass text-text-muted hover:text-text p-2">

@@ -1,68 +1,57 @@
 use std::collections::HashMap;
 
 use actix_web::{
-    HttpRequest, HttpResponse, Responder,
+    HttpResponse, Responder,
     error::{ErrorForbidden, ErrorInternalServerError},
     post, web,
 };
-use serde_json::{Value, json};
+use argon2::{
+    Argon2, PasswordHasher,
+    password_hash::{SaltString, rand_core::OsRng},
+};
+use serde::Deserialize;
+use serde_json::json;
 use sqlx::{Pool, Postgres};
 
-use crate::{
-    dto::create_post::{Request, Response},
-    entity::create_post::PostEntity,
-    helper::{get_request_hash, hash_password},
-};
+use crate::{extractors, validators::*};
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct Request {
+    author: String,
+    password: String,
+    title: String,
+    content: String,
+}
 
 #[post("/categories/{id}/posts")]
 pub async fn create_post(
-    req: HttpRequest,
     path: web::Path<i32>,
+    req_hash: extractors::RequestHash,
     data: web::Json<Request>,
     pool: web::Data<Pool<Postgres>>,
 ) -> actix_web::Result<impl Responder> {
-    let author_hash = get_request_hash(&req)?;
     let category_id = path.into_inner();
-    let Request {
-        author: author_name,
-        password,
-        title,
-        content,
-    } = data.into_inner();
 
-    let mut constraints = HashMap::<&str, Value>::new();
-    let author_name = author_name
-        .unwrap()
-        .map_err(|e| constraints.insert("author", e))
-        .ok();
-    let password = password
-        .unwrap()
-        .map_err(|e| constraints.insert("password", e))
-        .ok();
-    let title = title
-        .unwrap()
-        .map_err(|e| constraints.insert("title", e))
-        .ok();
-    let content = content
-        .unwrap()
-        .map_err(|e| constraints.insert("content", e))
-        .ok();
-
+    let mut constraints = HashMap::new();
+    validate_author("author", &data.author, &mut constraints);
+    validate_password("password", &data.password, &mut constraints);
+    validate_post_title("title", &data.title, &mut constraints);
+    validate_post_content("content", &data.content, &mut constraints);
     if !constraints.is_empty() {
         return Ok(HttpResponse::UnprocessableEntity().json(json!({
-            "constraints": constraints
+            "constraints": constraints,
         })));
     }
 
-    let author_name = author_name.unwrap();
-    let password = password.unwrap();
-    let title = title.unwrap();
-    let content = content.unwrap();
+    let salt = SaltString::generate(&mut OsRng);
+    let argon2 = Argon2::default();
+    let password_hash = argon2
+        .hash_password(data.password.as_bytes(), &salt)
+        .map(|hash| hash.to_string())
+        .map_err(ErrorInternalServerError)?;
 
-    let password_hash = hash_password(&password).map_err(ErrorInternalServerError)?;
-
-    let post = sqlx::query_as!(
-        PostEntity,
+    let post = sqlx::query!(
         r#"
         INSERT INTO posts (
             category_id,
@@ -78,16 +67,18 @@ pub async fn create_post(
         RETURNING id
         "#,
         category_id,
-        author_name,
-        author_hash,
+        &*data.author,
+        &*req_hash,
         password_hash,
-        title,
-        content
+        &*data.title,
+        &*data.content
     )
-    .fetch_optional(pool.get_ref())
+    .fetch_optional(&**pool)
     .await
     .map_err(ErrorInternalServerError)?
     .ok_or(ErrorForbidden("Category does not exist or is readonly"))?;
 
-    Ok(HttpResponse::Created().json(Response::from(post)))
+    Ok(HttpResponse::Ok().json(json!({
+        "id": post.id,
+    })))
 }

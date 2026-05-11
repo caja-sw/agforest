@@ -4,17 +4,16 @@
   import PostCard from "./PostCard.svelte";
 
   const { data } = $props();
-  const { post } = $derived(data);
 </script>
 
-<div class="grid gap-4 lg:grid-cols-[0.4fr_0.6fr]">
+<div class="grid gap-4 lg:grid-cols-[4fr_6fr]">
   <div class="col-span-full">
-    <PostCard {post} />
+    <PostCard post={data.post} />
   </div>
   <div>
-    <CommentWriteCard postId={post.id} />
+    <CommentWriteCard postId={data.post.id} />
   </div>
   <div>
-    <CommentListCard comments={post.comments} />
+    <CommentListCard comments={data.post.comments} />
   </div>
 </div>

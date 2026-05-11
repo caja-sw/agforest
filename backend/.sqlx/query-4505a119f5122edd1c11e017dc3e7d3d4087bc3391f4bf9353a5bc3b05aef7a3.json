@@ -1,0 +1,26 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO comments (\n            post_id,\n            author_name,\n            author_hash,\n            password_hash,\n            content\n        )\n        SELECT $1, $2, $3, $4, $5\n        FROM posts\n        WHERE id = $1\n        RETURNING id\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "4505a119f5122edd1c11e017dc3e7d3d4087bc3391f4bf9353a5bc3b05aef7a3"
+}

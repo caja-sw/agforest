@@ -1,28 +1,26 @@
 use actix_web::{
-    HttpRequest, HttpResponse, Responder, delete,
+    HttpResponse, Responder, delete,
     error::{ErrorForbidden, ErrorInternalServerError, ErrorNotFound},
     web,
 };
 use argon2::{Argon2, PasswordHash, PasswordVerifier};
 use sqlx::{Pool, Postgres};
 
-use crate::{entity::delete_post::PostEntity, helper::get_password};
+use crate::extractors;
 
 #[delete("/posts/{id}")]
 pub async fn delete_post(
-    req: HttpRequest,
     path: web::Path<i32>,
+    password: extractors::Password,
     pool: web::Data<Pool<Postgres>>,
 ) -> actix_web::Result<impl Responder> {
-    let password = get_password(&req)?.to_owned();
     let post_id = path.into_inner();
+
     let mut tx = pool.begin().await.map_err(ErrorInternalServerError)?;
 
-    let post = sqlx::query_as!(
-        PostEntity,
+    let post = sqlx::query!(
         r#"
-        SELECT
-            p.password_hash
+        SELECT p.password_hash
         FROM posts p
         JOIN categories c ON p.category_id = c.id
         WHERE p.id = $1 AND p.deleted_at IS NULL AND c.readonly = false 
@@ -44,7 +42,7 @@ pub async fn delete_post(
     sqlx::query!(
         r#"
         UPDATE posts
-        SET deleted_at = NOW()
+        SET deleted_at = now()
         WHERE id = $1
         "#,
         post_id
@@ -55,5 +53,5 @@ pub async fn delete_post(
 
     tx.commit().await.map_err(ErrorInternalServerError)?;
 
-    Ok(HttpResponse::NoContent())
+    Ok(HttpResponse::Ok().finish())
 }

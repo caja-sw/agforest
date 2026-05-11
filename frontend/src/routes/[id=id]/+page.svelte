@@ -2,7 +2,6 @@
   import { resolve } from "$app/paths";
 
   const { data } = $props();
-  const { categories, category, currentPage, maxPage, pages } = $derived(data);
 
   /**
    * @param {Date} date
@@ -34,23 +33,22 @@
 <div class="grid gap-4">
   <nav class="glass flex justify-between p-4">
     <ul class="flex">
-      {#each categories as category (category.id)}
+      {#each data.categories as category (category.id)}
         <li>
           <a
-            class="block p-2 leading-none"
-            href={resolve("/[id=id]", { id: String(category.id) })}
-            >{category.name}</a
+            class="block p-2 leading-none font-medium hover:font-semibold"
+            href={resolve("/[id=id]", { id: String(category.id) })}>{category.name}</a
           >
         </li>
       {/each}
     </ul>
 
     <div class="flex">
-      {#if !category.readonly}
+      {#if !data.category.readonly}
         <!-- eslint-disable svelte/no-navigation-without-resolve -->
         <a
-          class="block p-2 leading-none"
-          href={`${resolve("/write")}?${new URLSearchParams({ c: String(category.id) })}`}
+          class="block p-2 leading-none font-medium hover:font-semibold"
+          href={`${resolve("/write")}?${new URLSearchParams({ c: String(data.category.id) })}`}
           >게시글 쓰기</a
         >
         <!-- eslint-enable svelte/no-navigation-without-resolve -->
@@ -60,30 +58,26 @@
 
   <section class="glass grid gap-6 py-6">
     <header class="flex items-center justify-between px-6">
-      <h1 class="text-2xl leading-none">{category.name}</h1>
-      <span class="text-text-muted">{currentPage}/{maxPage} 페이지</span>
+      <h1 class="text-2xl leading-none">{data.category.name}</h1>
+      <span class="text-text-muted">{data.currentPage}/{data.maxPage} 페이지</span>
     </header>
 
     <div class="card p-4 md:mx-6">
-      {#if category.posts.length > 0}
+      {#if data.posts.length > 0}
         <ul>
-          {#each category.posts as post (post.id)}
+          {#each data.posts as post (post.id)}
             <li>
               <a href={resolve("/post/[id=id]", { id: String(post.id) })}>
-                <section
-                  class="hover:bg-text/5 grid grid-cols-[1fr_auto] gap-4 py-1"
-                >
+                <section class="hover:bg-text/5 grid grid-cols-[1fr_auto] gap-4 py-1">
                   <div>
                     <h1 class="grid">
-                      <span
-                        class="overflow-hidden text-ellipsis whitespace-nowrap"
+                      <span class="overflow-hidden text-ellipsis whitespace-nowrap"
                         >{post.title}</span
                       >
                     </h1>
                     <div class="text-text-muted flex flex-wrap gap-x-4">
                       <span class="grid grid-cols-[1fr_auto]">
-                        <span
-                          class="overflow-hidden text-ellipsis whitespace-nowrap"
+                        <span class="overflow-hidden text-ellipsis whitespace-nowrap"
                           >{post.author.name}</span
                         >
                         <span>#{post.author.hash.slice(0, 6)}</span>
@@ -92,11 +86,10 @@
                     </div>
                   </div>
                   <div class="w-8 place-self-center text-center">
-                    <span
-                      >{post.commentCount < 100
-                        ? post.commentCount
-                        : "99+"}</span
-                    >
+                    <span>💬{post.commentCount < 100 ? post.commentCount : "99+"}</span>
+                    <span>
+                      ❤️{post.likeCount}
+                    </span>
                   </div>
                 </section>
               </a>
@@ -111,17 +104,17 @@
 
   <nav class="glass p-4">
     <ul class="flex flex-row justify-center gap-5">
-      {#each pages as page (page)}
+      {#each data.pages as page (page)}
         <li>
           <!-- eslint-disable svelte/no-navigation-without-resolve -->
           <a
             class={[
               "grid size-10 place-items-center rounded-full font-bold outline",
-              page === currentPage
-                ? "bg-primary text-bg"
-                : "bg-bg text-text-muted",
+              page === data.currentPage
+                ? "bg-primary text-base-100"
+                : "bg-base-100 text-text-muted",
             ]}
-            href={`${resolve("/[id=id]", { id: String(category.id) })}?${new URLSearchParams({ p: String(page) })}`}
+            href={`${resolve("/[id=id]", { id: String(data.category.id) })}?${new URLSearchParams({ p: String(page) })}`}
           >
             <span>{page}</span>
           </a>

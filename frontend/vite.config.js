@@ -15,13 +15,6 @@ const proxy = {
 
 export default defineConfig({
   plugins: [tailwindcss(), sveltekit()],
-  server: {
-    watch: {
-      usePolling: true,
-    },
-    proxy,
-  },
-  preview: {
-    proxy,
-  },
+  server: { proxy },
+  preview: { proxy },
 });
