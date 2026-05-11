@@ -10,6 +10,7 @@ const authorMessage = (constraint) => {
   } else if (constraint?.LINEBREAK_CONSTRAINT) {
     return `닉네임은 줄바꿈을 포함할 수 없습니다`;
   }
+  return undefined;
 };
 
 /**
@@ -24,6 +25,7 @@ const passwordMessage = (constraint) => {
   } else if (constraint?.MAX_LENGTH_CONSTRAINT) {
     return `비밀번호는 ${constraint.MAX_LENGTH_CONSTRAINT.max}글자보다 길 수 없습니다`;
   }
+  return undefined;
 };
 
 /**
@@ -36,6 +38,7 @@ const titleMessage = (constraint) => {
   } else if (constraint?.MAX_LENGTH_CONSTRAINT) {
     return `제목은 ${constraint.MAX_LENGTH_CONSTRAINT.max}글자보다 길 수 없습니다`;
   }
+  return undefined;
 };
 
 /**
@@ -48,6 +51,7 @@ const contentMessage = (constraint) => {
   } else if (constraint?.MAX_LENGTH_CONSTRAINT) {
     return `내용은 ${constraint.MAX_LENGTH_CONSTRAINT.max}글자보다 길 수 없습니다`;
   }
+  return undefined;
 };
 
 const UNKNOWN = "알 수 없는 오류가 발생했습니다";
