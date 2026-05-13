@@ -41,6 +41,7 @@ pub fn start_server(config: &Config) -> anyhow::Result<()> {
                 .service(services::like_comment)
                 .service(services::unlike_post)
                 .service(services::unlike_comment)
+                .service(services::view_post)
         })
         .bind((config.server_host.as_str(), config.server_port))
         .context("Failed to bind server")?

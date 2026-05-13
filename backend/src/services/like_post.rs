@@ -16,7 +16,7 @@ pub async fn like_post(
         r#"
         UPDATE posts
         SET like_count = like_count + 1
-        WHERE id = $1
+        WHERE id = $1 AND deleted_at IS NULL
         RETURNING id
         "#,
         post_id

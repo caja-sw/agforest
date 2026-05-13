@@ -5,26 +5,26 @@ use actix_web::{
 };
 use sqlx::{Pool, Postgres};
 
-#[post("/comments/{id}/like")]
-pub async fn like_comment(
+#[post("/posts/{id}/view")]
+pub async fn view_post(
     path: web::Path<i32>,
     pool: web::Data<Pool<Postgres>>,
 ) -> actix_web::Result<impl Responder> {
-    let comment_id = path.into_inner();
+    let post_id = path.into_inner();
 
     sqlx::query!(
         r#"
-        UPDATE comments
-        SET like_count = like_count + 1
+        UPDATE posts
+        SET view_count = view_count + 1
         WHERE id = $1 AND deleted_at IS NULL
         RETURNING id
         "#,
-        comment_id
+        post_id
     )
     .fetch_optional(&**pool)
     .await
     .map_err(ErrorInternalServerError)?
-    .ok_or(ErrorNotFound("Comment not found"))?;
+    .ok_or(ErrorNotFound("Post not found"))?;
 
     Ok(HttpResponse::Ok().finish())
 }

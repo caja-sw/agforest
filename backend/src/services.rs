@@ -10,6 +10,7 @@ mod like_comment;
 mod like_post;
 mod unlike_comment;
 mod unlike_post;
+mod view_post;
 
 pub use create_comment::*;
 pub use create_post::*;
@@ -23,3 +24,4 @@ pub use like_comment::*;
 pub use like_post::*;
 pub use unlike_comment::*;
 pub use unlike_post::*;
+pub use view_post::*;

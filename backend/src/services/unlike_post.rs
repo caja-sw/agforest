@@ -16,7 +16,7 @@ pub async fn unlike_post(
         r#"
         UPDATE posts
         SET like_count = GREATEST(like_count - 1, 0)
-        WHERE id = $1
+        WHERE id = $1 AND deleted_at IS NULL
         RETURNING id
         "#,
         post_id
