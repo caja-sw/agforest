@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        UPDATE comments\n        SET like_count = GREATEST(like_count - 1, 0)\n        WHERE id = $1\n        RETURNING id\n        ",
+  "query": "\n        UPDATE posts\n        SET view_count = view_count + 1\n        WHERE id = $1 AND deleted_at IS NULL\n        RETURNING id\n        ",
   "describe": {
     "columns": [
       {
@@ -18,5 +18,5 @@
       false
     ]
   },
-  "hash": "47f423db6d328f1df06973e8e1e505d1649d0422c22bbb61f99a7fadc98cb0ca"
+  "hash": "7f36c5e413a25783df28c2e77bb6cb3b59f7be7b385ba9f4bd83e3f93162af0e"
 }
