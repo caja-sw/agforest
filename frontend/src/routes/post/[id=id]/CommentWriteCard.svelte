@@ -14,16 +14,18 @@
   let passwordError = $state("");
   let contentError = $state("");
 
-  let uploading = $state(false);
+  let disabled = $state(false);
+  let lock = false;
 
   /** @param {SubmitEvent} event */
   async function submit(event) {
     event.preventDefault();
 
-    if (uploading) {
+    if (lock) {
       return;
     }
-    uploading = true;
+    lock = true;
+    disabled = true;
 
     try {
       await createComment({ postId, author, password, content });
@@ -45,7 +47,8 @@
         alert("알 수 없는 오류가 발생했습니다");
       }
     } finally {
-      uploading = false;
+      disabled = false;
+      lock = false;
       await invalidateAll();
     }
   }
@@ -67,7 +70,7 @@
     <ContentField bind:value={content} bind:error={contentError} minLines={3} />
 
     <div class="place-self-end">
-      <SubmitButton disabled={uploading} />
+      <SubmitButton {disabled} />
     </div>
   </form>
 </section>
