@@ -83,6 +83,22 @@ export const unlikePost = async ({ id }) => {
 };
 
 /**
+ * 게시글 조회수
+ *
+ * @param {Object} param0
+ * @param {number} param0.id
+ * @returns {Promise<void>}
+ */
+export const viewPost = async ({ id }) => {
+  const res = await fetch(resolveAPI(`posts/${id}/view`), {
+    method: "POST",
+  });
+  if (!res.ok) {
+    return Promise.reject(res);
+  }
+};
+
+/**
  * 댓글 생성
  *
  * @param {Object} param0

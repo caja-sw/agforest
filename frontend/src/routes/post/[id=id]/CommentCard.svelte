@@ -7,8 +7,10 @@
   /** @type {{ comment: Comment }} */
   const { comment } = $props();
 
-  let deleting = $state(false);
-  let liking = $state(false);
+  let deleteDisabled = $state(false);
+  let deleteLock = false;
+  let likeDisabled = $state(false);
+  let likeLock = false;
   let liked = $state(false);
   const likedKey = $derived(`liked_comment_${comment.id}`);
 
@@ -25,41 +27,50 @@
   });
 
   async function handleLike() {
-    if (liking) {
+    if (likeLock) {
       return;
     }
-    liking = true;
+    likeLock = true;
+    likeDisabled = true;
 
     try {
       if (liked) {
-        await unlikeComment({ id: comment.id });
         liked = false;
+        await unlikeComment({ id: comment.id });
       } else {
-        await likeComment({ id: comment.id });
         liked = true;
+        await likeComment({ id: comment.id });
       }
     } catch {
+      liked = !liked;
       alert("좋아요 처리에 실패했습니다.");
     } finally {
-      liking = false;
+      likeDisabled = false;
+      likeLock = false;
       await invalidateAll();
     }
   }
 
   async function handleDelete() {
-    if (deleting) {
+    if (deleteLock) {
       return;
     }
-    deleting = true;
+    deleteLock = true;
+    deleteDisabled = true;
 
     try {
       const password = prompt("비밀번호를 입력하세요");
       if (password === null) {
+        deleteDisabled = false;
+        deleteLock = false;
         return;
       }
 
       await deleteComment({ id: comment.id, password });
     } catch (errRes) {
+      deleteDisabled = false;
+      deleteLock = false;
+
       if (!(errRes instanceof Response)) {
         throw errRes;
       }
@@ -72,7 +83,6 @@
         alert("알 수 없는 오류가 발생했습니다");
       }
     } finally {
-      deleting = false;
       await invalidateAll();
     }
   }
@@ -87,7 +97,7 @@
   <p class="whitespace-pre-wrap">{comment.content}</p>
 
   <div class="flex gap-2 place-self-end">
-    <LikeButton {liked} count={comment.likeCount} onclick={handleLike} disabled={liking} />
-    <DeleteButton onclick={handleDelete} disabled={deleting} />
+    <LikeButton {liked} count={comment.likeCount} onclick={handleLike} disabled={likeDisabled} />
+    <DeleteButton onclick={handleDelete} disabled={deleteDisabled} />
   </div>
 </article>

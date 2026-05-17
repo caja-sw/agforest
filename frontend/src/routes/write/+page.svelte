@@ -17,16 +17,18 @@
   let titleError = $state("");
   let contentError = $state("");
 
-  let uploading = $state(false);
+  let disabled = $state(false);
+  let lock = false;
 
   /** @param {SubmitEvent} event */
   async function submit(event) {
     event.preventDefault();
 
-    if (uploading) {
+    if (lock) {
       return;
     }
-    uploading = true;
+    lock = true;
+    disabled = true;
 
     try {
       const { id } = await createPost({
@@ -36,8 +38,11 @@
         title,
         content,
       });
-      goto(resolve("/post/[id=id]", { id: String(id) }));
+      await goto(resolve("/post/[id=id]", { id: String(id) }));
     } catch (errRes) {
+      disabled = false;
+      lock = false;
+
       if (!(errRes instanceof Response)) {
         throw errRes;
       }
@@ -54,8 +59,6 @@
       } else {
         alert("알 수 없는 오류가 발생했습니다");
       }
-    } finally {
-      uploading = false;
     }
   }
 </script>
@@ -86,7 +89,7 @@
     <ContentField bind:value={content} bind:error={contentError} minLines={10} />
 
     <div class="place-self-end">
-      <SubmitButton disabled={uploading} />
+      <SubmitButton {disabled} />
     </div>
   </form>
 </div>
