@@ -7,8 +7,9 @@ use actix_web::{
 };
 use argon2::{
     Argon2, PasswordHasher,
-    password_hash::{SaltString, rand_core::OsRng},
+    password_hash::{Salt, SaltString},
 };
+use rand::{TryRng, rngs::SysRng};
 use serde::Deserialize;
 use serde_json::json;
 use sqlx::{Pool, Postgres};
@@ -42,7 +43,11 @@ pub async fn create_comment(
         })));
     }
 
-    let salt = SaltString::generate(&mut OsRng);
+    let mut salt_bytes = [0u8; Salt::RECOMMENDED_LENGTH];
+    SysRng
+        .try_fill_bytes(&mut salt_bytes)
+        .map_err(ErrorInternalServerError)?;
+    let salt = SaltString::encode_b64(&salt_bytes).map_err(ErrorInternalServerError)?;
     let argon2 = Argon2::default();
     let password_hash = argon2
         .hash_password(data.password.as_bytes(), &salt)
