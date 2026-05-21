@@ -13,7 +13,6 @@
     "lint": "prettier --check . && eslint ."
   },
   "devDependencies": {
-    "@eslint/config-helpers": "^0.6",
     "@eslint/js": "^10",
     "@sveltejs/adapter-node": "^5",
     "@sveltejs/kit": "^2",
@@ -26,7 +25,7 @@
     "globals": "^17",
     "pretendard": "^1",
     "prettier": "^3",
-    "prettier-plugin-svelte": "^3",
+    "prettier-plugin-svelte": "^4",
     "prettier-plugin-tailwindcss": "^0.8",
     "svelte": "^5",
     "svelte-check": "^4",
