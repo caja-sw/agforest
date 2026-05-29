@@ -12,7 +12,6 @@ export const load = async ({ fetch, url }) => {
   }
 
   return {
-    title: "게시글 작성",
     categories,
     category,
   };
