@@ -17,7 +17,6 @@
       error = "";
       currentTarget.style.height = "auto";
       currentTarget.style.height = `${currentTarget.scrollHeight}px`;
-    }}
-  ></textarea>
+    }}></textarea>
   <span class="text-warn">{error}</span>
 </div>
